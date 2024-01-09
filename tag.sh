@@ -5,7 +5,7 @@
 VERSION=$1
 COMMIT_ID=$(git rev-parse HEAD)
 COMMIT_ID=${COMMIT_ID:0:8}
-BRANCH=$(git branch --show-current)
+# BRANCH=$(git branch --show-current)
 
 ORIGIN=$1
 if [ -z "$ORIGIN" ]; then

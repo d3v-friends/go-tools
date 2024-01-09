@@ -26,8 +26,8 @@ func (x *UUID) Scan(src any) (err error) {
 	}
 }
 
-func (x *UUID) Value() (res driver.Value, err error) {
-	res = string(*x)
+func (x UUID) Value() (res driver.Value, err error) {
+	res = string(x)
 	return
 }
 
