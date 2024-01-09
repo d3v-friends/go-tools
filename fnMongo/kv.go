@@ -1,11 +1,10 @@
-package mdMongo
+package fnMongo
 
 import (
 	"context"
 	"encoding/json"
 	"fmt"
 	"github.com/d3v-friends/go-pure/fnReflect"
-	"github.com/d3v-friends/go-tools/fnMongo"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -22,7 +21,7 @@ type Kv struct {
 
 const ColNmKv = "kvs"
 
-var MigrateKv = []fnMongo.FnMigrate{
+var MigrateKv = []FnMigrate{
 	func(ctx context.Context, col *mongo.Collection) (memo string, err error) {
 		memo = "init indexing"
 		_, err = col.Indexes().CreateMany(ctx, []mongo.IndexModel{
@@ -50,7 +49,7 @@ func GetKv[T any](
 ) (res *T, err error) {
 	var now = time.Now()
 	var doc = new(Kv)
-	var col = fnMongo.GetDBP(ctx, key).Collection(colNm)
+	var col = GetDBP(ctx, key).Collection(colNm)
 	var total int64
 	if total, err = col.CountDocuments(
 		ctx,
@@ -118,7 +117,7 @@ func SetKv[T any](
 	if byteValue, err = json.Marshal(value); err != nil {
 		return
 	}
-	if _, err = fnMongo.GetDBP(ctx).Collection(colNm).UpdateOne(
+	if _, err = GetDBP(ctx).Collection(colNm).UpdateOne(
 		ctx,
 		bson.M{
 			"key": key,

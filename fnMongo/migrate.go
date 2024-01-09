@@ -2,10 +2,11 @@ package fnMongo
 
 import (
 	"context"
-	"github.com/d3v-friends/go-tools/mdMongo"
+	"github.com/d3v-friends/go-pure/fnReflect"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"time"
 )
 
@@ -19,8 +20,8 @@ func Migrate(
 ) (err error) {
 	var modelList = make([]*MigrateModel, 0)
 	modelList = append(modelList, &MigrateModel{
-		ColNm:   mdMongo.ColNmMango,
-		Migrate: mdMongo.MigrateMango,
+		ColNm:   ColNmMango,
+		Migrate: MigrateMango,
 	})
 	modelList = append(modelList, i.Models...)
 
@@ -38,11 +39,11 @@ func Migrate(
 		if count == 0 {
 			if _, err = colMango.InsertOne(
 				ctx,
-				&mdMongo.Mango{
+				&Mango{
 					Id:        primitive.NewObjectID(),
 					ColNm:     model.ColNm,
 					NextIdx:   0,
-					History:   make([]*mdMongo.MangoHistory, 0),
+					History:   make([]*MangoHistory, 0),
 					CreatedAt: now,
 					UpdatedAt: now,
 				},
@@ -62,7 +63,7 @@ func Migrate(
 			return
 		}
 
-		var doc = new(mdMongo.Mango)
+		var doc = new(Mango)
 		if err = cur.Decode(doc); err != nil {
 			return
 		}
@@ -84,7 +85,7 @@ func Migrate(
 				},
 				bson.M{
 					"$push": bson.M{
-						"history": &mdMongo.MangoHistory{
+						"history": &MangoHistory{
 							Memo:       memo,
 							MigratedAt: time.Now(),
 						},
@@ -99,4 +100,44 @@ func Migrate(
 	}
 
 	return
+}
+
+/*------------------------------------------------------------------------------------------------*/
+
+type (
+	Mango struct {
+		Id        primitive.ObjectID `bson:"_id"`
+		ColNm     string             `bson:"colNm"`
+		NextIdx   int                `bson:"nextIdx"`
+		History   []*MangoHistory    `bson:"history"`
+		CreatedAt time.Time          `bson:"createdAt"`
+		UpdatedAt time.Time          `bson:"updatedAt"`
+	}
+
+	MangoHistory struct {
+		Memo       string    `bson:"memo"`
+		MigratedAt time.Time `bson:"migratedAt"`
+	}
+)
+
+const ColNmMango = "mango"
+
+var MigrateMango = []FnMigrate{
+	func(ctx context.Context, col *mongo.Collection) (memo string, err error) {
+		memo = "init indexing"
+		_, err = col.Indexes().CreateMany(ctx, []mongo.IndexModel{
+			{
+				Keys: bson.D{
+					{
+						Key:   "colNm",
+						Value: 1,
+					},
+				},
+				Options: &options.IndexOptions{
+					Unique: fnReflect.ToPointer(true),
+				},
+			},
+		})
+		return
+	},
 }

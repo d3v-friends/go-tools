@@ -5,7 +5,6 @@ import (
 	"github.com/d3v-friends/go-pure/fnEnv"
 	"github.com/d3v-friends/go-pure/fnPanic"
 	"github.com/d3v-friends/go-pure/fnReflect"
-	"github.com/d3v-friends/go-tools/mdMongo"
 	"github.com/d3v-friends/go-tools/typ"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -32,8 +31,8 @@ func TestMigrate(test *testing.T) {
 		var err = Migrate(ctx, &MigrateArgs{
 			Models: []*MigrateModel{
 				{
-					ColNm:   mdMongo.ColNmMango,
-					Migrate: mdMongo.MigrateMango,
+					ColNm:   ColNmMango,
+					Migrate: MigrateMango,
 				},
 			},
 		})

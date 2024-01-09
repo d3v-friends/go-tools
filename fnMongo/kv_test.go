@@ -1,4 +1,4 @@
-package mdMongo
+package fnMongo
 
 import "testing"
 
