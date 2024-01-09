@@ -6,17 +6,22 @@ require (
 	github.com/99designs/gqlgen v0.17.42
 	github.com/d3v-friends/go-pure v1.0.1
 	github.com/gertd/go-pluralize v0.2.1
+	github.com/golang-jwt/jwt/v5 v5.2.0
 	github.com/google/uuid v1.5.0
 	github.com/shopspring/decimal v1.3.1
+	github.com/stretchr/testify v1.8.4
 	go.mongodb.org/mongo-driver v1.13.1
 	gorm.io/driver/mysql v1.5.2
 	gorm.io/gorm v1.25.5
 )
 
 require (
+	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/go-sql-driver/mysql v1.7.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
+	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/sosodev/duration v1.1.0 // indirect
 	github.com/vektah/gqlparser/v2 v2.5.10 // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
