@@ -1,0 +1,8 @@
+# ide
+.vs
+.vscode
+.idea
+.fleet
+
+# end
+.env
