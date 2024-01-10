@@ -40,8 +40,9 @@ type Time struct {
 	LTE      *time.Time
 }
 
-func (x *Time) Query(nm string) (res bson.M, err error) {
-	var query = make(bson.M)
+func (x *Time) Query() (query bson.M, err error) {
+	query = make(bson.M)
+
 	if x.Equal != nil {
 		query["$equal"] = *x.Equal
 	}
@@ -69,10 +70,6 @@ func (x *Time) Query(nm string) (res bson.M, err error) {
 	if len(query) == 0 {
 		err = fmt.Errorf("not found query value")
 		return
-	}
-
-	res = bson.M{
-		nm: query,
 	}
 
 	return
