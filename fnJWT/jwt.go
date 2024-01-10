@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/d3v-friends/go-pure/fnParams"
 	"github.com/golang-jwt/jwt/v5"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"time"
 )
 
@@ -15,7 +14,7 @@ type JWT struct {
 }
 
 type IfJwtData interface {
-	GetID() primitive.ObjectID
+	GetID() string
 }
 
 func NewJWT(
@@ -44,7 +43,7 @@ func (x *JWT) Encode(data IfJwtData) (res string, err error) {
 		Issuer:    x.issuer,
 		NotBefore: nowNumericDate,
 		IssuedAt:  nowNumericDate,
-		ID:        data.GetID().Hex(),
+		ID:        data.GetID(),
 	}
 
 	if 0 < x.expire {
@@ -61,7 +60,7 @@ func (x *JWT) Encode(data IfJwtData) (res string, err error) {
 	return
 }
 
-func (x *JWT) Decode(str string) (res primitive.ObjectID, err error) {
+func (x *JWT) Decode(str string) (res string, err error) {
 	var claims = new(jwt.RegisteredClaims)
 	var token *jwt.Token
 	if token, err = jwt.ParseWithClaims(str, claims, func(token *jwt.Token) (interface{}, error) {
@@ -76,9 +75,6 @@ func (x *JWT) Decode(str string) (res primitive.ObjectID, err error) {
 		return
 	}
 
-	if res, err = primitive.ObjectIDFromHex(claims.ID); err != nil {
-		return
-	}
-
+	res = claims.ID
 	return
 }

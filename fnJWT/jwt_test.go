@@ -26,12 +26,12 @@ func TestJWT(test *testing.T) {
 
 		fmt.Printf("jwt_token=%s\n", jwtToken)
 
-		var id primitive.ObjectID
+		var id string
 		if id, err = v1.Decode(jwtToken); err != nil {
 			t.Fatal(err)
 		}
 
-		assert.Equal(t, data.Id.Hex(), id.Hex())
+		assert.Equal(t, data.Id.Hex(), id)
 	})
 
 	test.Run("expire", func(t *testing.T) {
@@ -71,8 +71,8 @@ type testData struct {
 	Subject  string
 }
 
-func (x testData) GetID() primitive.ObjectID {
-	return x.Id
+func (x testData) GetID() string {
+	return x.Id.Hex()
 }
 
 func (x testData) GetAudience() []string {
