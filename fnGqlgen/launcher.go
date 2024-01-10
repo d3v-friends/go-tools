@@ -6,9 +6,10 @@ import (
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"strings"
 )
 
-func Run(port string, path string, handler *handler.Server) *echo.Echo {
+func Run(port string, path string, handler *handler.Server) error {
 	var e = echo.New()
 	e.Use(middleware.Gzip())
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
@@ -21,7 +22,12 @@ func Run(port string, path string, handler *handler.Server) *echo.Echo {
 		handler.ServeHTTP(c.Response(), req)
 		return nil
 	})
-	return e
+
+	if !strings.HasPrefix(port, ":") {
+		port = fmt.Sprintf(":%s", port)
+	}
+
+	return e.Start(port)
 }
 
 const ctxAuthorization = "CTX_AUTHORIZATION"
