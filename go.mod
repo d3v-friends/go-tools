@@ -4,7 +4,7 @@ go 1.21.4
 
 require (
 	github.com/99designs/gqlgen v0.17.42
-	github.com/d3v-friends/go-pure v1.0.1
+	github.com/d3v-friends/go-pure v1.0.0-20240110122659
 	github.com/gertd/go-pluralize v0.2.1
 	github.com/golang-jwt/jwt/v5 v5.2.0
 	github.com/google/uuid v1.5.0
