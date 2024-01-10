@@ -4,38 +4,37 @@ import (
 	"fmt"
 	"github.com/d3v-friends/go-pure/fnParams"
 	"github.com/golang-jwt/jwt/v5"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"time"
 )
 
-type V1[DATA IfJwtData] struct {
+type JWT[DATA IfJwtData] struct {
 	secret []byte
 	issuer string
 	expire time.Duration
 }
 
 type IfJwtData interface {
-	GetSessionID() string
-	GetAudience() []string
-	GetSubject() string
+	GetID() string
 }
 
-func NewV1[DATA IfJwtData](
+func NewJWT[DATA IfJwtData](
 	secret, issuer string,
 	expires ...time.Duration,
-) *V1[DATA] {
+) *JWT[DATA] {
 	var expire = fnParams.Get(expires)
 	if expire == 0 {
 		expire = -1
 	}
 
-	return &V1[DATA]{
+	return &JWT[DATA]{
 		secret: []byte(secret),
 		issuer: issuer,
 		expire: expire,
 	}
 }
 
-func (x V1[DATA]) Encode(data DATA) (res string, err error) {
+func (x *JWT[DATA]) Encode(data DATA) (res string, err error) {
 	var now = time.Now()
 	var nowNumericDate = &jwt.NumericDate{
 		Time: now,
@@ -43,11 +42,9 @@ func (x V1[DATA]) Encode(data DATA) (res string, err error) {
 
 	var claims = &jwt.RegisteredClaims{
 		Issuer:    x.issuer,
-		Subject:   data.GetSubject(),
-		Audience:  data.GetAudience(),
 		NotBefore: nowNumericDate,
 		IssuedAt:  nowNumericDate,
-		ID:        data.GetSessionID(),
+		ID:        data.GetID(),
 	}
 
 	if 0 < x.expire {
@@ -64,8 +61,8 @@ func (x V1[DATA]) Encode(data DATA) (res string, err error) {
 	return
 }
 
-func (x V1[DATA]) Decode(str string) (claims *jwt.RegisteredClaims, err error) {
-	claims = new(jwt.RegisteredClaims)
+func (x *JWT[DATA]) Decode(str string) (res primitive.ObjectID, err error) {
+	var claims = new(jwt.RegisteredClaims)
 	var token *jwt.Token
 	if token, err = jwt.ParseWithClaims(str, claims, func(token *jwt.Token) (interface{}, error) {
 		return x.secret, nil
@@ -76,6 +73,10 @@ func (x V1[DATA]) Decode(str string) (claims *jwt.RegisteredClaims, err error) {
 	if !token.Valid {
 		claims = nil
 		err = fmt.Errorf("invalid jwt_str: str=%s", str)
+		return
+	}
+
+	if res, err = primitive.ObjectIDFromHex(claims.ID); err != nil {
 		return
 	}
 

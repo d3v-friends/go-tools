@@ -2,7 +2,6 @@ package fnJWT
 
 import (
 	"fmt"
-	"github.com/golang-jwt/jwt/v5"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"testing"
@@ -13,7 +12,7 @@ func TestJWT(test *testing.T) {
 	var secret, issuer = "secret1234!1234", "dev_friends"
 
 	test.Run("test", func(t *testing.T) {
-		var v1 = NewV1[testData](secret, issuer)
+		var v1 = NewJWT[testData](secret, issuer)
 		var data = testData{
 			Id:       primitive.NewObjectID(),
 			Username: "dev_friends",
@@ -27,19 +26,16 @@ func TestJWT(test *testing.T) {
 
 		fmt.Printf("jwt_token=%s\n", jwtToken)
 
-		var claim *jwt.RegisteredClaims
-		if claim, err = v1.Decode(jwtToken); err != nil {
+		var id primitive.ObjectID
+		if id, err = v1.Decode(jwtToken); err != nil {
 			t.Fatal(err)
 		}
 
-		assert.Equal(t, data.Id.Hex(), claim.ID)
-		assert.Equal(t, 1, len(claim.Audience))
-		assert.Equal(t, data.Username, claim.Audience[0])
-		assert.Equal(t, data.Subject, claim.Subject)
+		assert.Equal(t, data.Id.Hex(), id.Hex())
 	})
 
 	test.Run("expire", func(t *testing.T) {
-		var v1 = NewV1[testData](secret, issuer, time.Second*2)
+		var v1 = NewJWT[testData](secret, issuer, time.Second*2)
 
 		var data = testData{
 			Id:       primitive.NewObjectID(),
@@ -75,7 +71,7 @@ type testData struct {
 	Subject  string
 }
 
-func (x testData) GetSessionID() string {
+func (x testData) GetID() string {
 	return x.Id.Hex()
 }
 
