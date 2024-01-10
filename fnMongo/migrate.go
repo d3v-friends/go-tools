@@ -10,20 +10,16 @@ import (
 	"time"
 )
 
-type MigrateArgs struct {
-	Models []*MigrateModel
-}
-
 func Migrate(
 	ctx context.Context,
-	i *MigrateArgs,
+	models ...*MigrateModel,
 ) (err error) {
 	var modelList = make([]*MigrateModel, 0)
 	modelList = append(modelList, &MigrateModel{
 		ColNm:   ColNmMango,
 		Migrate: MigrateMango,
 	})
-	modelList = append(modelList, i.Models...)
+	modelList = append(modelList, models...)
 
 	var db = GetDBP(ctx)
 	var colMango = db.Collection(modelList[0].ColNm)
