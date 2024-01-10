@@ -1,17 +1,20 @@
 #!/bin/bash
 
 # ex) sh tag.sh 1.0.0
+TZ=utc
 
 VERSION=$1
-COMMIT_ID=$(git rev-parse HEAD)
-COMMIT_ID=${COMMIT_ID:0:8}
+if [ -z "$VERSION" ]; then
+    VERSION="1.0.0"
+fi
+DATE=$(date '+%Y%m%d%H%M%S')
 
 ORIGIN=$2
 if [ -z "$ORIGIN" ]; then
 	ORIGIN="origin"
 fi
 
-TAG="v$VERSION-$COMMIT_ID"
+TAG="v$VERSION-$DATE"
 
 # delete tag
 git tag -d "$TAG"

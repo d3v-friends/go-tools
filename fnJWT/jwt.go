@@ -8,33 +8,33 @@ import (
 	"time"
 )
 
-type JWT[DATA IfJwtData] struct {
+type JWT struct {
 	secret []byte
 	issuer string
 	expire time.Duration
 }
 
 type IfJwtData interface {
-	GetID() string
+	GetID() primitive.ObjectID
 }
 
-func NewJWT[DATA IfJwtData](
+func NewJWT(
 	secret, issuer string,
 	expires ...time.Duration,
-) *JWT[DATA] {
+) *JWT {
 	var expire = fnParams.Get(expires)
 	if expire == 0 {
 		expire = -1
 	}
 
-	return &JWT[DATA]{
+	return &JWT{
 		secret: []byte(secret),
 		issuer: issuer,
 		expire: expire,
 	}
 }
 
-func (x *JWT[DATA]) Encode(data DATA) (res string, err error) {
+func (x *JWT) Encode(data IfJwtData) (res string, err error) {
 	var now = time.Now()
 	var nowNumericDate = &jwt.NumericDate{
 		Time: now,
@@ -44,7 +44,7 @@ func (x *JWT[DATA]) Encode(data DATA) (res string, err error) {
 		Issuer:    x.issuer,
 		NotBefore: nowNumericDate,
 		IssuedAt:  nowNumericDate,
-		ID:        data.GetID(),
+		ID:        data.GetID().Hex(),
 	}
 
 	if 0 < x.expire {
@@ -61,7 +61,7 @@ func (x *JWT[DATA]) Encode(data DATA) (res string, err error) {
 	return
 }
 
-func (x *JWT[DATA]) Decode(str string) (res primitive.ObjectID, err error) {
+func (x *JWT) Decode(str string) (res primitive.ObjectID, err error) {
 	var claims = new(jwt.RegisteredClaims)
 	var token *jwt.Token
 	if token, err = jwt.ParseWithClaims(str, claims, func(token *jwt.Token) (interface{}, error) {
