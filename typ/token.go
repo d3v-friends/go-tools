@@ -39,7 +39,7 @@ func MarshalToken(b string) graphql.Marshaler {
 	})
 }
 
-func UnmarshalToken(v any) (res string, err error) {
+func UnmarshalToken(v interface{}) (res string, err error) {
 	switch t := v.(type) {
 	case string:
 		res = t

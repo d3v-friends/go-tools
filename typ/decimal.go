@@ -61,7 +61,7 @@ func MarshalDecimal(b decimal.Decimal) graphql.Marshaler {
 	})
 }
 
-func UnmarshalDecimal(v any) (res decimal.Decimal, err error) {
+func UnmarshalDecimal(v interface{}) (res decimal.Decimal, err error) {
 	switch t := v.(type) {
 	case string:
 		return decimal.NewFromString(t)
