@@ -50,17 +50,15 @@ func MarshalUUID(b UUID) graphql.Marshaler {
 	})
 }
 
-func UnmarshalUUID(v interface{}) (res UUID, err error) {
+func UnmarshalUUID(v interface{}) (UUID, error) {
 	switch t := v.(type) {
 	case string:
-		res = UUID(t)
-		return
+		return UUID(t), nil
 	case []byte:
-		res = UUID(t)
-		return
+		return UUID(t), nil
 	default:
-		err = fmt.Errorf("invalid UUID scalar")
-		return
+		var err = fmt.Errorf("invalid UUID scalar")
+		return "", err
 	}
 }
 

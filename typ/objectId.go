@@ -14,14 +14,14 @@ func MarshalObjectID(b primitive.ObjectID) graphql.Marshaler {
 	})
 }
 
-func UnmarshalObjectID(v interface{}) (res primitive.ObjectID, err error) {
+func UnmarshalObjectID(v interface{}) (primitive.ObjectID, error) {
 	switch t := v.(type) {
 	case string:
 		return primitive.ObjectIDFromHex(t)
 	case []byte:
 		return primitive.ObjectIDFromHex(string(t))
 	default:
-		err = fmt.Errorf("invalid ObjectID")
-		return
+		var err = fmt.Errorf("invalid ObjectID")
+		return primitive.NilObjectID, err
 	}
 }

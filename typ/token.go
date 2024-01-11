@@ -39,16 +39,14 @@ func MarshalToken(b string) graphql.Marshaler {
 	})
 }
 
-func UnmarshalToken(v interface{}) (res string, err error) {
+func UnmarshalToken(v interface{}) (string, error) {
 	switch t := v.(type) {
 	case string:
-		res = t
-		return
+		return t, nil
 	case []byte:
-		res = string(t)
-		return
+		return string(t), nil
 	default:
-		err = fmt.Errorf("invalid Token scalar")
-		return
+		var err = fmt.Errorf("invalid Token scalar")
+		return "", err
 	}
 }

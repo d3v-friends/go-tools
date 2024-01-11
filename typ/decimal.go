@@ -61,14 +61,14 @@ func MarshalDecimal(b decimal.Decimal) graphql.Marshaler {
 	})
 }
 
-func UnmarshalDecimal(v interface{}) (res decimal.Decimal, err error) {
+func UnmarshalDecimal(v interface{}) (decimal.Decimal, error) {
 	switch t := v.(type) {
 	case string:
 		return decimal.NewFromString(t)
 	case json.Number:
 		return decimal.NewFromString(t.String())
 	default:
-		err = fmt.Errorf("invalid Decimal scalar")
-		return
+		var err = fmt.Errorf("invalid Decimal scalar")
+		return decimal.Zero, err
 	}
 }
