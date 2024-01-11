@@ -16,7 +16,7 @@ import (
 
 func TestMigrate(test *testing.T) {
 	fnPanic.On(fnEnv.ReadFromFile("../env/.env"))
-	var client = fnPanic.OnValue(Connect(&ConnectArgs{
+	var client = fnPanic.OnValue(ConnectClient(&ConnectClientArgs{
 		Host:     fnEnv.Read("MG_HOST"),
 		Username: fnEnv.Read("MG_USERNAME"),
 		Password: fnEnv.Read("MG_PASSWORD"),
@@ -28,13 +28,9 @@ func TestMigrate(test *testing.T) {
 	test.Run("migrate", func(t *testing.T) {
 		var ctx = context.TODO()
 		ctx = SetDB(ctx, client.Database(fnEnv.Read("MG_DATABASE")))
-		var err = Migrate(ctx, &MigrateArgs{
-			Models: []*MigrateModel{
-				{
-					ColNm:   ColNmMango,
-					Migrate: MigrateMango,
-				},
-			},
+		var err = Migrate(ctx, &MigrateModel{
+			ColNm:   ColNmMango,
+			Migrate: MigrateMango,
 		})
 
 		if err != nil {

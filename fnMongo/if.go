@@ -15,15 +15,15 @@ type (
 	}
 
 	Filter interface {
-		GetFilter() (filter bson.M, err error)
+		GetFilter() (bson.M, error)
 	}
 
 	Sorter interface {
-		GetSorter() (filter bson.M, err error)
+		GetSorter() (bson.M, error)
 	}
 
-	Query interface {
-		GetQuery() (res bson.M, err error)
+	Updater interface {
+		GetUpdater() (bson.M, error)
 	}
 )
 

@@ -3,6 +3,7 @@ package fnMongo
 import (
 	"context"
 	"github.com/d3v-friends/go-pure/fnReflect"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -13,7 +14,7 @@ func FindOne[T any](
 	filter Filter,
 	sorter ...Sorter,
 ) (res *T, err error) {
-	var f any
+	var f bson.M
 	if f, err = filter.GetFilter(); err != nil {
 		return
 	}
@@ -48,7 +49,7 @@ func FindAll[T any](
 	filter Filter,
 	sorter ...Sorter,
 ) (res []*T, err error) {
-	var f any
+	var f bson.M
 	if f, err = filter.GetFilter(); err != nil {
 		return
 	}
@@ -83,7 +84,7 @@ func FindList[T any](
 	pager Pager,
 	sorter ...Sorter,
 ) (res *ResultList[T], err error) {
-	var f any
+	var f bson.M
 	if f, err = filter.GetFilter(); err != nil {
 		return
 	}
