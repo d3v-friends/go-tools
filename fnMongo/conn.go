@@ -14,21 +14,26 @@ import (
 
 type FnSetRegistry func(registry *bsoncodec.Registry) *bsoncodec.Registry
 
-type ConnectArgs struct {
+type ConnectToClient struct {
 	Host        string
 	Username    string
 	Password    string
 	SetRegistry []FnSetRegistry
 }
 
-func (x *ConnectArgs) options() (opt *options.ClientOptions) {
+type ConnectToDB struct {
+	*ConnectToClient
+	Database string
+}
+
+func createOpt(i *ConnectToClient) (opt *options.ClientOptions) {
 	opt = options.Client().
-		ApplyURI(fmt.Sprintf("mongodb://%s", x.Host)).
+		ApplyURI(fmt.Sprintf("mongodb://%s", i.Host)).
 		SetReadConcern(readconcern.Majority()).
 		SetWriteConcern(writeconcern.Majority()).
 		SetAuth(options.Credential{
-			Username: x.Username,
-			Password: x.Password,
+			Username: i.Username,
+			Password: i.Password,
 		}).
 		SetBSONOptions(&options.BSONOptions{
 			UseLocalTimeZone: false,
@@ -36,8 +41,8 @@ func (x *ConnectArgs) options() (opt *options.ClientOptions) {
 
 	opt.Registry = bson.DefaultRegistry
 
-	if len(x.SetRegistry) != 0 {
-		for _, registry := range x.SetRegistry {
+	if len(i.SetRegistry) != 0 {
+		for _, registry := range i.SetRegistry {
 			opt.Registry = registry(opt.Registry)
 		}
 	}
@@ -45,13 +50,9 @@ func (x *ConnectArgs) options() (opt *options.ClientOptions) {
 	return
 }
 
-func Connect(i *ConnectArgs, ctxs ...context.Context) (client *mongo.Client, err error) {
+func ConnectClient(i *ConnectToClient) (client *mongo.Client, err error) {
 	var ctx = context.TODO()
-	if 0 < len(ctxs) {
-		ctx = ctxs[0]
-	}
-
-	if client, err = mongo.Connect(ctx, i.options()); err != nil {
+	if client, err = mongo.Connect(ctx, createOpt(i)); err != nil {
 		return
 	}
 
@@ -59,5 +60,14 @@ func Connect(i *ConnectArgs, ctxs ...context.Context) (client *mongo.Client, err
 		return
 	}
 
+	return
+}
+
+func ConnectDB(i *ConnectToDB) (db *mongo.Database, err error) {
+	var client *mongo.Client
+	if client, err = ConnectClient(i.ConnectToClient); err != nil {
+		return
+	}
+	db = client.Database(i.Database)
 	return
 }

@@ -68,7 +68,7 @@ func UnmarshalDecimal(v interface{}) (decimal.Decimal, error) {
 	case json.Number:
 		return decimal.NewFromString(t.String())
 	default:
-		var err = fmt.Errorf("invalid Decimal scalar")
+		var err = fmt.Errorf("invalid Decimal")
 		return decimal.Zero, err
 	}
 }
