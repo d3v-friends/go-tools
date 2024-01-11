@@ -110,13 +110,18 @@ func Migrate(
 	return
 }
 
+type CollectionInfo struct {
+	Name string `bson:"name"`
+	Type string `bson:"type"`
+}
+
 func getColNmList(ctx context.Context) (ls []string, err error) {
 	var cur *mongo.Cursor
 	if cur, err = GetDBP(ctx).ListCollections(ctx, bson.M{}); err != nil {
 		return
 	}
 
-	ls = make([]string, 0)
+	var colNms = make([]*CollectionInfo, 0)
 	if err = cur.All(ctx, &ls); err != nil {
 		return
 	}
