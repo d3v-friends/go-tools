@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/99designs/gqlgen/graphql/handler"
+	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"net/http"
@@ -16,6 +17,7 @@ func Run(
 	port string,
 	path string,
 	handler *handler.Server,
+	hasPlayground bool,
 	interceptors ...CtxInterceptor,
 ) error {
 	var interceptor = getInterceptor(interceptors)
@@ -35,6 +37,13 @@ func Run(
 		handler.ServeHTTP(c.Response(), req)
 		return nil
 	})
+
+	if hasPlayground {
+		e.GET("/playground", func(c echo.Context) error {
+			playground.ApolloSandboxHandler("playground", path).ServeHTTP(c.Response(), c.Request())
+			return nil
+		})
+	}
 
 	if !strings.HasPrefix(port, ":") {
 		port = fmt.Sprintf(":%s", port)

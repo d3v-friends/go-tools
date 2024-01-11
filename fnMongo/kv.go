@@ -19,6 +19,11 @@ type Kv struct {
 	UpdatedAt time.Time          `bson:"updatedAt"`
 }
 
+var KvModel = &MigrateModel{
+	ColNm:   "kvs",
+	Migrate: MigrateKv,
+}
+
 const ColNmKv = "kvs"
 
 var MigrateKv = []FnMigrate{
