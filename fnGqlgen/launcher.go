@@ -9,7 +9,16 @@ import (
 	"strings"
 )
 
-func Run(port string, path string, handler *handler.Server) error {
+type CtxInterceptor func(ctx context.Context) context.Context
+
+func Run(
+	port string,
+	path string,
+	handler *handler.Server,
+	interceptors ...CtxInterceptor,
+) error {
+	var interceptor = getInterceptor(interceptors)
+
 	var e = echo.New()
 	e.Use(middleware.Gzip())
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
@@ -18,7 +27,8 @@ func Run(port string, path string, handler *handler.Server) error {
 	}))
 	e.POST(path, func(c echo.Context) error {
 		var auth = c.Request().Header.Get("Authorization")
-		var req = c.Request().WithContext(SetAuth(c.Request().Context(), auth))
+		var ctx = interceptor(SetAuth(c.Request().Context(), auth))
+		var req = c.Request().WithContext(ctx)
 		handler.ServeHTTP(c.Response(), req)
 		return nil
 	})
@@ -41,6 +51,17 @@ func GetAuth(ctx context.Context) (auth string, err error) {
 	if auth, has = ctx.Value(ctxAuthorization).(string); !has {
 		err = fmt.Errorf("not found authorization")
 		return
+	}
+	return
+}
+
+func getInterceptor(i []CtxInterceptor) (res CtxInterceptor) {
+	res = func(ctx context.Context) context.Context {
+		return ctx
+	}
+
+	if len(i) != 0 {
+		res = i[0]
 	}
 	return
 }
