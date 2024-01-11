@@ -14,19 +14,19 @@ import (
 
 type FnSetRegistry func(registry *bsoncodec.Registry) *bsoncodec.Registry
 
-type ConnectToClient struct {
+type ConnectClientArgs struct {
 	Host        string
 	Username    string
 	Password    string
 	SetRegistry []FnSetRegistry
 }
 
-type ConnectToDB struct {
-	*ConnectToClient
+type ConnectDBArgs struct {
+	*ConnectClientArgs
 	Database string
 }
 
-func createOpt(i *ConnectToClient) (opt *options.ClientOptions) {
+func createOpt(i *ConnectClientArgs) (opt *options.ClientOptions) {
 	opt = options.Client().
 		ApplyURI(fmt.Sprintf("mongodb://%s", i.Host)).
 		SetReadConcern(readconcern.Majority()).
@@ -50,7 +50,7 @@ func createOpt(i *ConnectToClient) (opt *options.ClientOptions) {
 	return
 }
 
-func ConnectClient(i *ConnectToClient) (client *mongo.Client, err error) {
+func ConnectClient(i *ConnectClientArgs) (client *mongo.Client, err error) {
 	var ctx = context.TODO()
 	if client, err = mongo.Connect(ctx, createOpt(i)); err != nil {
 		return
@@ -63,9 +63,9 @@ func ConnectClient(i *ConnectToClient) (client *mongo.Client, err error) {
 	return
 }
 
-func ConnectDB(i *ConnectToDB) (db *mongo.Database, err error) {
+func ConnectDB(i *ConnectDBArgs) (db *mongo.Database, err error) {
 	var client *mongo.Client
-	if client, err = ConnectClient(i.ConnectToClient); err != nil {
+	if client, err = ConnectClient(i.ConnectClientArgs); err != nil {
 		return
 	}
 	db = client.Database(i.Database)
