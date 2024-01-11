@@ -6,6 +6,7 @@ import (
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"net/http"
 	"strings"
 )
 
@@ -26,8 +27,10 @@ func Run(
 		AllowMethods: []string{"GET", "POST", "OPTION"},
 	}))
 	e.POST(path, func(c echo.Context) error {
-		var auth = c.Request().Header.Get("Authorization")
-		var ctx = interceptor(SetAuth(c.Request().Context(), auth))
+		var ctx = c.Request().Context()
+		ctx = SetHeader(ctx, c.Request().Header)
+		ctx = interceptor(ctx)
+
 		var req = c.Request().WithContext(ctx)
 		handler.ServeHTTP(c.Response(), req)
 		return nil
@@ -40,17 +43,25 @@ func Run(
 	return e.Start(port)
 }
 
-const ctxAuthorization = "CTX_AUTHORIZATION"
+const ctxHeader = "CTX_HEADER"
 
-func SetAuth(ctx context.Context, auth string) context.Context {
-	return context.WithValue(ctx, ctxAuthorization, auth)
+func SetHeader(ctx context.Context, header http.Header) context.Context {
+	return context.WithValue(ctx, ctxHeader, header)
 }
 
-func GetAuth(ctx context.Context) (auth string, err error) {
+func GetHeader(ctx context.Context) (header http.Header, err error) {
 	var has bool
-	if auth, has = ctx.Value(ctxAuthorization).(string); !has {
-		err = fmt.Errorf("not found authorization")
+	if header, has = ctx.Value(ctxHeader).(http.Header); !has {
+		err = fmt.Errorf("not found header")
 		return
+	}
+	return
+}
+
+func GetHeaderP(ctx context.Context) (header http.Header) {
+	var err error
+	if header, err = GetHeader(ctx); err != nil {
+		panic(err)
 	}
 	return
 }
