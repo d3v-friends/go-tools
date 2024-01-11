@@ -2,6 +2,7 @@ package fnMongo
 
 import (
 	"context"
+	"github.com/d3v-friends/go-pure/fnMatch"
 	"github.com/d3v-friends/go-pure/fnReflect"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -24,7 +25,18 @@ func Migrate(
 	var db = GetDBP(ctx)
 	var colMango = db.Collection(modelList[0].ColNm)
 	var now = time.Now()
+	var colNmList []string
+	if colNmList, err = getColNmList(ctx); err != nil {
+		return
+	}
 	for _, model := range modelList {
+
+		if !fnMatch.Contain(colNmList, model.ColNm) {
+			if err = db.CreateCollection(ctx, model.ColNm); err != nil {
+				return
+			}
+		}
+
 		var count int64
 		if count, err = colMango.CountDocuments(ctx, bson.M{
 			"colNm": model.ColNm,
@@ -93,6 +105,20 @@ func Migrate(
 				return err
 			}
 		}
+	}
+
+	return
+}
+
+func getColNmList(ctx context.Context) (ls []string, err error) {
+	var cur *mongo.Cursor
+	if cur, err = GetDBP(ctx).ListCollections(ctx, bson.M{}); err != nil {
+		return
+	}
+
+	ls = make([]string, 0)
+	if err = cur.All(ctx, &ls); err != nil {
+		return
 	}
 
 	return
