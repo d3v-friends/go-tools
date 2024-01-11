@@ -18,8 +18,10 @@ func UnmarshalObjectID(v interface{}) (res primitive.ObjectID, err error) {
 	switch t := v.(type) {
 	case string:
 		return primitive.ObjectIDFromHex(t)
+	case []byte:
+		return primitive.ObjectIDFromHex(string(t))
 	default:
-		err = fmt.Errorf("invalid ObjectID scalar")
+		err = fmt.Errorf("invalid ObjectID")
 		return
 	}
 }
