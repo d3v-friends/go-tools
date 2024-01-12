@@ -18,6 +18,9 @@ func NewUUID() UUID {
 	return UUID(uuid.NewString())
 }
 
+/*------------------------------------------------------------------------------------------------*/
+// gorm
+
 func (x *UUID) Scan(src any) (err error) {
 	switch v := src.(type) {
 	case string:
@@ -42,7 +45,7 @@ func (x *UUID) String() string {
 }
 
 /*------------------------------------------------------------------------------------------------*/
-// for gqlgen
+// gqlgen
 
 func MarshalUUID(b UUID) graphql.Marshaler {
 	return graphql.WriterFunc(func(w io.Writer) {

@@ -54,6 +54,7 @@ func (dc *DecimalCodec) DecodeValue(_ bsoncodec.DecodeContext, vr bsonrw.ValueRe
 }
 
 /*------------------------------------------------------------------------------------------------*/
+// gqlgen
 
 func MarshalDecimal(b decimal.Decimal) graphql.Marshaler {
 	return graphql.WriterFunc(func(w io.Writer) {

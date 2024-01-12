@@ -12,7 +12,7 @@ func TestJWT(test *testing.T) {
 	var secret, issuer = "secret1234!1234", "dev_friends"
 
 	test.Run("test", func(t *testing.T) {
-		var v1 = NewJWT(secret, issuer)
+		var v1 = NewJwt(secret, issuer)
 		var data = testData{
 			Id:       primitive.NewObjectID(),
 			Username: "dev_friends",
@@ -35,7 +35,7 @@ func TestJWT(test *testing.T) {
 	})
 
 	test.Run("expire", func(t *testing.T) {
-		var v1 = NewJWT(secret, issuer, time.Second*2)
+		var v1 = NewJwt(secret, issuer, time.Second*2)
 
 		var data = testData{
 			Id:       primitive.NewObjectID(),

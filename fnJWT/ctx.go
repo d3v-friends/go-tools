@@ -5,24 +5,24 @@ import (
 	"fmt"
 )
 
-const ctxJwt = "CTX_JWT"
+const CtxJwtKey = "CTX_JWT"
 
-func SetJWT(ctx context.Context, jwt *JWT) context.Context {
-	return context.WithValue(ctx, ctxJwt, jwt)
+func SetCtx(ctx context.Context, jwt *Jwt) context.Context {
+	return context.WithValue(ctx, CtxJwtKey, jwt)
 }
 
-func GetJWT(ctx context.Context) (jwt *JWT, err error) {
+func GetCtx(ctx context.Context) (jwt *Jwt, err error) {
 	var has bool
-	if jwt, has = ctx.Value(ctxJwt).(*JWT); !has {
+	if jwt, has = ctx.Value(CtxJwtKey).(*Jwt); !has {
 		err = fmt.Errorf("not found jwt")
 		return
 	}
 	return
 }
 
-func GetJWTP(ctx context.Context) (jwt *JWT) {
+func GetCtxP(ctx context.Context) (jwt *Jwt) {
 	var err error
-	if jwt, err = GetJWT(ctx); err != nil {
+	if jwt, err = GetCtx(ctx); err != nil {
 		return
 	}
 	return

@@ -7,33 +7,33 @@ import (
 	"time"
 )
 
-type JWT struct {
+type Jwt struct {
 	secret []byte
 	issuer string
 	expire time.Duration
 }
 
-type IfJwtData interface {
+type JwtData interface {
 	GetID() string
 }
 
-func NewJWT(
+func NewJwt(
 	secret, issuer string,
 	expires ...time.Duration,
-) *JWT {
+) *Jwt {
 	var expire = fnParams.Get(expires)
 	if expire == 0 {
 		expire = -1
 	}
 
-	return &JWT{
+	return &Jwt{
 		secret: []byte(secret),
 		issuer: issuer,
 		expire: expire,
 	}
 }
 
-func (x *JWT) Encode(data IfJwtData) (res string, err error) {
+func (x *Jwt) Encode(data JwtData) (res string, err error) {
 	var now = time.Now()
 	var nowNumericDate = &jwt.NumericDate{
 		Time: now,
@@ -60,7 +60,7 @@ func (x *JWT) Encode(data IfJwtData) (res string, err error) {
 	return
 }
 
-func (x *JWT) Decode(str string) (res string, err error) {
+func (x *Jwt) Decode(str string) (res string, err error) {
 	var claims = new(jwt.RegisteredClaims)
 	var token *jwt.Token
 	if token, err = jwt.ParseWithClaims(str, claims, func(token *jwt.Token) (interface{}, error) {
