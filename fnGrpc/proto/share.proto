@@ -1,0 +1,28 @@
+syntax = "proto3";
+package proto;
+
+message Time {
+  string value = 1;
+}
+
+message Decimal {
+  string value = 1;
+}
+
+message ObjectID {
+  string value = 1;
+}
+
+message Period {
+  optional Time equal = 1;
+  optional Time notEqual = 2;
+  optional Time gt = 3;
+  optional Time gte = 4;
+  optional Time lt = 5;
+  optional Time lte = 6;
+}
+
+message Pager {
+  int64 page = 1;
+  int64 size = 2;
+}

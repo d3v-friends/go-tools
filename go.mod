@@ -4,15 +4,15 @@ go 1.21.4
 
 require (
 	github.com/99designs/gqlgen v0.17.42
-	github.com/d3v-friends/go-pure v1.0.0-20240110122659
+	github.com/d3v-friends/go-pure v1.0.0-20240115124000
 	github.com/golang-jwt/jwt/v5 v5.2.0
 	github.com/google/uuid v1.5.0
 	github.com/labstack/echo/v4 v4.11.4
-	github.com/labstack/gommon v0.4.2
 	github.com/shopspring/decimal v1.3.1
 	github.com/spf13/cobra v1.8.0
 	github.com/stretchr/testify v1.8.4
 	go.mongodb.org/mongo-driver v1.13.1
+	gopkg.in/yaml.v3 v3.0.1
 )
 
 require (
@@ -23,6 +23,7 @@ require (
 	github.com/gorilla/websocket v1.5.1 // indirect
 	github.com/hashicorp/golang-lru/v2 v2.0.7 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
+	github.com/labstack/gommon v0.4.2 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
@@ -37,5 +38,4 @@ require (
 	golang.org/x/sys v0.16.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	golang.org/x/time v0.5.0 // indirect
-	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

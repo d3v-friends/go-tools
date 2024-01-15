@@ -1,0 +1,7 @@
+proto: "../proto"
+out: "../"
+package: "pb"
+include:
+  - "share.proto"
+import:
+#  - "share.proto"
