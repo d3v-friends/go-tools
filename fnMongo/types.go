@@ -35,3 +35,32 @@ type (
 		List  []*T
 	}
 )
+
+/*------------------------------------------------------------------------------------------------*/
+
+type IdxDir int
+
+func (x IdxDir) Int() int {
+	return int(x)
+}
+
+func (x IdxDir) Valid() bool {
+	for _, dir := range IdxDirAll {
+		if x == dir {
+			return true
+		}
+	}
+	return false
+}
+
+var (
+	IdxDirASC  IdxDir = 1
+	IdxDirDESC IdxDir = -1
+)
+
+var IdxDirAll = []IdxDir{
+	IdxDirASC,
+	IdxDirDESC,
+}
+
+/*------------------------------------------------------------------------------------------------*/
