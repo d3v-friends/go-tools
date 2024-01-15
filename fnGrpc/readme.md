@@ -24,5 +24,9 @@
 4. cli 사용하기
 
    ~~~bash
-   go install github.com/d3v-friends/go-tools/fnGrpc/cmd
+   # 설치
+   go install github.com/d3v-friends/go-tools/fnGrpc/go-grpc
+   
+   # 사용
+   go-grpc --config grpc.yml
    ~~~
