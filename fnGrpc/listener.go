@@ -1,14 +1,22 @@
 package fnGrpc
 
 import (
+	"crypto/tls"
 	"fmt"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
 	"net"
 	"strings"
 )
 
-func NewServer() *grpc.Server {
-	panic("not implement")
+func NewServer(opts ...grpc.ServerOption) *grpc.Server {
+	opts = append(opts, grpc.Creds(credentials.NewTLS(&tls.Config{
+		ClientAuth: tls.NoClientCert,
+	})))
+
+	return grpc.NewServer(
+		opts...,
+	)
 }
 
 func Listen(sv *grpc.Server, port string) (err error) {
