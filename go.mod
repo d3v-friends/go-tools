@@ -4,7 +4,6 @@ go 1.21.4
 
 require (
 	github.com/99designs/gqlgen v0.17.42
-	github.com/d3v-friends/go-pure v1.0.0-20240115124000
 	github.com/golang-jwt/jwt/v5 v5.2.0
 	github.com/google/uuid v1.5.0
 	github.com/labstack/echo/v4 v4.11.4
@@ -13,7 +12,7 @@ require (
 	github.com/stretchr/testify v1.8.4
 	go.mongodb.org/mongo-driver v1.13.1
 	google.golang.org/grpc v1.60.1
-	google.golang.org/protobuf v1.31.0
+	google.golang.org/protobuf v1.32.0
 	gopkg.in/yaml.v3 v3.0.1
 )
 

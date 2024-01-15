@@ -2,7 +2,7 @@ package fnPanic
 
 import (
 	"fmt"
-	"github.com/d3v-friends/go-pure/fnLogger"
+	"github.com/d3v-friends/go-tools/fnLogger"
 	"log"
 	"path/filepath"
 	"runtime"

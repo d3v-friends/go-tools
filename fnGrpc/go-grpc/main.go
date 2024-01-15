@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"github.com/d3v-friends/go-pure/fnFile"
-	"github.com/d3v-friends/go-pure/fnPanic"
+	"github.com/d3v-friends/go-tools/fnFile"
+	"github.com/d3v-friends/go-tools/fnPanic"
 	"github.com/d3v-friends/go-tools/fnYaml"
 	"github.com/spf13/cobra"
 	"log"

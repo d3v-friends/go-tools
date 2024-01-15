@@ -2,7 +2,7 @@ package fnGrpc
 
 import (
 	"context"
-	"github.com/d3v-friends/go-pure/fnLogger"
+	"github.com/d3v-friends/go-tools/fnLogger"
 	"github.com/google/uuid"
 	"google.golang.org/grpc"
 	"time"

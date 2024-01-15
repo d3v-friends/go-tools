@@ -1,7 +1,7 @@
 package proto
 
 import (
-	"github.com/d3v-friends/go-pure/fnPanic"
+	"github.com/d3v-friends/go-tools/fnPanic"
 	"github.com/shopspring/decimal"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"time"

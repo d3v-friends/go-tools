@@ -2,7 +2,7 @@ package fnJWT
 
 import (
 	"fmt"
-	"github.com/d3v-friends/go-pure/fnParams"
+	"github.com/d3v-friends/go-tools/fnParams"
 	"github.com/golang-jwt/jwt/v5"
 	"time"
 )

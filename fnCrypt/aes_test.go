@@ -2,7 +2,7 @@ package fnCrypt
 
 import (
 	"fmt"
-	"github.com/d3v-friends/go-pure/fnPanic"
+	"github.com/d3v-friends/go-tools/fnPanic"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )

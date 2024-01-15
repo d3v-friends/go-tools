@@ -3,10 +3,10 @@ package fnCrypt
 import (
 	"crypto/aes"
 	"crypto/cipher"
-	rand "crypto/rand"
+	"crypto/rand"
 	"encoding/base64"
 	"fmt"
-	"github.com/d3v-friends/go-pure/fnParams"
+	"github.com/d3v-friends/go-tools/fnParams"
 	"io"
 	mRand "math/rand"
 	"time"
