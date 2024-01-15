@@ -19,12 +19,10 @@ func FindOne[T any](
 	}
 
 	var opt = &options.FindOneOptions{}
-	if len(sorter) != 0 {
-		var s any
-		if s, err = sorter[0].GetSorter(); err != nil {
+	if len(sorter) != 0 && sorter[0] != nil {
+		if opt.Sort, err = sorter[0].GetSorter(); err != nil {
 			return
 		}
-		opt.Sort = s
 	}
 
 	var col = GetCtxDBP(ctx).Collection(filter.GetColNm())
@@ -53,12 +51,10 @@ func FindAll[T any](
 	}
 
 	var opt = &options.FindOptions{}
-	if len(sorter) != 0 {
-		var s any
-		if s, err = sorter[0].GetSorter(); err != nil {
+	if len(sorter) != 0 && sorter[0] != nil {
+		if opt.Sort, err = sorter[0].GetSorter(); err != nil {
 			return
 		}
-		opt.Sort = s
 	}
 
 	var col = GetCtxDBP(ctx).Collection(filter.GetColNm())
@@ -93,12 +89,10 @@ func FindList[T any](
 	}
 
 	var opt = &options.FindOptions{}
-	if len(sorter) != 0 {
-		var s any
-		if s, err = sorter[0].GetSorter(); err != nil {
+	if len(sorter) != 0 && sorter[0] != nil {
+		if opt.Sort, err = sorter[0].GetSorter(); err != nil {
 			return
 		}
-		opt.Sort = s
 	}
 
 	opt.Skip = fnReflect.ToPointer(pager.GetPage() * pager.GetSize())

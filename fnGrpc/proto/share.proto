@@ -1,5 +1,5 @@
 syntax = "proto3";
-package fnGrpc;
+package proto;
 
 message Time {
   string value = 1;
@@ -25,4 +25,9 @@ message Period {
 message Pager {
   int64 page = 1;
   int64 size = 2;
+}
+
+enum IdxDir {
+  ASC = 0;
+  DESC = 1;
 }
