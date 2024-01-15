@@ -7,6 +7,10 @@ import (
 	"strings"
 )
 
+func NewServer() *grpc.Server {
+	panic("not implement")
+}
+
 func Listen(sv *grpc.Server, port string) (err error) {
 	var lis net.Listener
 
