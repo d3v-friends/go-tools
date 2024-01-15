@@ -1,4 +1,4 @@
-package fnString
+package fnCsv
 
 import (
 	"fmt"

@@ -1,5 +1,5 @@
 syntax = "proto3";
-package fnGrpc.proto;
+package fnGrpc;
 
 message Time {
   string value = 1;
