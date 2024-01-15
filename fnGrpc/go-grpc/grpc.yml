@@ -1,6 +1,6 @@
 proto: "../proto"
 out: "../"
-package: "pb"
+package: "proto"
 include:
   - "share.proto"
 import:
