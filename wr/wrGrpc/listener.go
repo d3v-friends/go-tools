@@ -1,35 +1,28 @@
 package wrGrpc
 
 import (
-	"crypto/tls"
 	"fmt"
+	"github.com/d3v-friends/go-tools/fn/fnPanic"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials"
+	"google.golang.org/grpc/credentials/insecure"
 	"net"
 	"strings"
 )
 
-func NewServer(opts ...grpc.ServerOption) *grpc.Server {
-	opts = append(opts, grpc.Creds(credentials.NewTLS(&tls.Config{
-		ClientAuth: tls.NoClientCert,
-	})))
+var ServerOptNoCredential = grpc.Creds(insecure.NewCredentials())
 
-	return grpc.NewServer(
-		opts...,
-	)
-}
-
-func Listen(sv *grpc.Server, port string) (err error) {
+func Listen(sv *grpc.Server, port string) {
 	var lis net.Listener
 
 	if !strings.HasPrefix(port, ":") {
 		port = fmt.Sprintf(":%s", port)
 	}
 
+	var err error
 	if lis, err = net.Listen("tcp", port); err != nil {
 		return
 	}
 
 	fmt.Printf("🚀 Server ready at http://localhost%s\n", port)
-	return sv.Serve(lis)
+	fnPanic.On(sv.Serve(lis))
 }
