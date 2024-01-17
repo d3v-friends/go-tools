@@ -30,3 +30,9 @@
    # 사용
    go-grpc --config grpc.yml
    ~~~
+
+
+## 프로파일링
+~~~bash
+go get github.com/google/pprof
+~~~
