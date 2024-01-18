@@ -1,7 +1,6 @@
 package grCouponPoint
 
 import (
-	"context"
 	"github.com/d3v-friends/go-tools/typ"
 	"github.com/d3v-friends/go-tools/wr/wrGorm"
 	"gorm.io/gorm"
@@ -24,7 +23,7 @@ func (x *Account) Migrate() []wrGorm.Migrate {
 
 /*------------------------------------------------------------------------------------------------*/
 
-func CreateAccount(ctx context.Context) (res *Account, err error) {
+func CreateAccount(tx *gorm.DB) (res *Account, err error) {
 	var accountId = typ.NewUUID()
 	var now = time.Now()
 	res = &Account{
@@ -36,8 +35,7 @@ func CreateAccount(ctx context.Context) (res *Account, err error) {
 	}
 
 	var rows *gorm.DB
-	var db = wrGorm.GetDBP(ctx)
-	if rows = db.Create(res); rows.Error != nil {
+	if rows = tx.Create(res); rows.Error != nil {
 		err = rows.Error
 		return
 	}

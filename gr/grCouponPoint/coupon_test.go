@@ -9,11 +9,10 @@ import (
 
 func TestCoupon(test *testing.T) {
 	var tool = NewTestTool()
-	var ctx = tool.Context()
 	test.Run("create coupon", func(t *testing.T) {
-		var account = fnPanic.Get(CreateAccount(ctx))
+		var account = fnPanic.Get(CreateAccount(tool.DB))
 
-		var coupon = fnPanic.Get(CreateCoupon(ctx, &CreateCouponArgs{
+		var coupon = fnPanic.Get(CreateCoupon(tool.DB, &CreateCouponArgs{
 			AccountId: account.Id,
 			Currency:  decimal.NewFromInt(10000),
 			Price:     decimal.NewFromInt(10),

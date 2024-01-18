@@ -10,10 +10,7 @@ func TestAccount(test *testing.T) {
 	var tool = NewTestTool()
 
 	test.Run("create account", func(t *testing.T) {
-		var ctx = tool.Context()
-
-		var account = fnPanic.Get(CreateAccount(ctx))
-
+		var account = fnPanic.Get(CreateAccount(tool.DB))
 		assert.Equal(t, 0, len(account.CouponList))
 
 	})

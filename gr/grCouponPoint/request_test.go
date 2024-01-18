@@ -14,9 +14,10 @@ import (
 func TestRequest(test *testing.T) {
 	var tool = NewTestTool(true)
 	var ctx = tool.Context()
+	var db = tool.DB
 	test.Run("request", func(t *testing.T) {
-		var account = fnPanic.Get(CreateAccount(ctx))
-		var _ = fnPanic.Get(CreateCoupon(ctx, &CreateCouponArgs{
+		var account = fnPanic.Get(CreateAccount(db))
+		var _ = fnPanic.Get(CreateCoupon(db, &CreateCouponArgs{
 			AccountId: account.Id,
 			Currency:  decimal.NewFromInt(10000),
 			Price:     decimal.NewFromInt(10),
@@ -41,7 +42,7 @@ func TestRequest(test *testing.T) {
 
 	test.Run("shortage", func(t *testing.T) {
 
-		var account = fnPanic.Get(CreateAccount(ctx))
+		var account = fnPanic.Get(CreateAccount(db))
 		var err = CreateRequest(ctx, &CreateRequestArgs{
 			AccountId: account.Id,
 			Point:     decimal.NewFromInt(10),
@@ -64,7 +65,7 @@ func TestRequest(test *testing.T) {
 	})
 
 	test.Run("use more coupons", func(t *testing.T) {
-		var account = fnPanic.Get(CreateAccount(ctx))
+		var account = fnPanic.Get(CreateAccount(db))
 
 		// expected
 		var count = 10
@@ -73,7 +74,7 @@ func TestRequest(test *testing.T) {
 		var point = 100
 
 		for i := 0; i < count; i++ {
-			fnPanic.Get(CreateCoupon(ctx, &CreateCouponArgs{
+			fnPanic.Get(CreateCoupon(db, &CreateCouponArgs{
 				AccountId: account.Id,
 				Currency:  decimal.NewFromInt(int64(currency)),
 				Price:     decimal.NewFromInt(int64(price)),

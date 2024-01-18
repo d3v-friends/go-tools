@@ -38,7 +38,7 @@ type CreateCouponArgs struct {
 	Point     decimal.Decimal // 전체 전송 가능 갯수
 }
 
-func CreateCoupon(ctx context.Context, i *CreateCouponArgs) (res *Coupon, err error) {
+func CreateCoupon(tx *gorm.DB, i *CreateCouponArgs) (res *Coupon, err error) {
 	var usageId = typ.NewUUID()
 	var couponId = typ.NewUUID()
 	var now = time.Now()
@@ -63,9 +63,8 @@ func CreateCoupon(ctx context.Context, i *CreateCouponArgs) (res *Coupon, err er
 		},
 	}
 
-	var db = wrGorm.GetDBP(ctx)
 	var rows *gorm.DB
-	if rows = db.Model(&Coupon{}).Create(res); rows.Error != nil {
+	if rows = tx.Model(&Coupon{}).Create(res); rows.Error != nil {
 		err = rows.Error
 		return
 	}
