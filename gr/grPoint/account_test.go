@@ -10,7 +10,7 @@ import (
 )
 
 func TestAccount(test *testing.T) {
-	var tools = NewTestTool(true)
+	var tools = NewTestTool()
 	var ctx = tools.Context()
 
 	test.Run("create account", func(t *testing.T) {

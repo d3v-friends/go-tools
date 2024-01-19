@@ -60,8 +60,6 @@ func CreateAccount(ctx context.Context, i *CreateAccountArgs) error {
 			Id:        typ.NewUUID(),
 			CreatedAt: now,
 			UpdatedAt: now,
-			Coupons:   make([]*Coupon, 0),
-			Wallets:   make([]*Wallet, 0),
 		}
 		var rows *gorm.DB
 		if rows = tx.Create(account); rows.Error != nil {
@@ -78,12 +76,14 @@ func CreateAccount(ctx context.Context, i *CreateAccountArgs) error {
 			UpdatedAt:       now,
 		}
 
-		if rows = tx.Create(wallet); rows.Error != nil {
+		if rows = tx.
+			Model(&Wallet{}).
+			Create(wallet); rows.Error != nil {
 			err = rows.Error
 			return
 		}
 
-		account.Wallets = append(account.Wallets, wallet)
+		account.Wallets = Wallets{wallet}
 
 		var walletBalance = &WalletBalance{
 			Id:           walletBalanceId,
@@ -95,7 +95,9 @@ func CreateAccount(ctx context.Context, i *CreateAccountArgs) error {
 			CreatedAt:    now,
 		}
 
-		if rows = tx.Create(walletBalance); rows.Error != nil {
+		if rows = tx.
+			Model(&WalletBalance{}).
+			Create(walletBalance); rows.Error != nil {
 			err = rows.Error
 			return
 		}

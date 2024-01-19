@@ -90,4 +90,18 @@ func TestCouponUseRequest(test *testing.T) {
 
 		assert.Equal(t, restCurrency.String(), loadedCoupons.RestCurrency().String())
 	})
+
+	test.Run("cancel", func(t *testing.T) {
+		var account = tools.NewAccount()
+		var err = CreateCoupon(tools.Context(), &CreateCouponArgs{
+			AccountId: account.Id,
+			Currency:  decimal.NewFromInt(1000),
+			Price:     decimal.NewFromInt(10),
+			Fn: func(ctx context.Context, i *Coupon) (err error) {
+				return fmt.Errorf("error")
+			},
+		})
+
+		assert.Error(t, err)
+	})
 }

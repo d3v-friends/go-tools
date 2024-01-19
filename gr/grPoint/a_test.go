@@ -13,6 +13,12 @@ import (
 )
 
 func TestAll(test *testing.T) {
+	NewTestTool(true)
+	TestAccount(test)
+	TestCoupon(test)
+	TestCouponUseRequest(test)
+	TestWallet(test)
+	TestWalletUseRequest(test)
 
 }
 
@@ -21,7 +27,7 @@ type TestTool struct {
 }
 
 func NewTestTool(truncate ...bool) (res *TestTool) {
-	fnPanic.On(fnEnv.ReadFromFile("./.env"))
+	fnPanic.On(fnEnv.ReadFromFile("../.env"))
 	var c = fnPanic.Get(wrGorm.NewConnect(&wrGorm.ConnectArgs{
 		Host:     fnEnv.Read("DB_HOST"),
 		Username: fnEnv.Read("DB_USERNAME"),
