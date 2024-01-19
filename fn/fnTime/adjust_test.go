@@ -2,7 +2,7 @@ package fnTime
 
 import (
 	"fmt"
-	"github.com/d3v-friends/go-tools/fnPanic"
+	"github.com/d3v-friends/go-tools/fn/fnPanic"
 	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"

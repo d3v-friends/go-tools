@@ -1,7 +1,7 @@
 package fnFile
 
 import (
-	"github.com/d3v-friends/go-tools/fnPanic"
+	"github.com/d3v-friends/go-tools/fn/fnPanic"
 	"os"
 	"path/filepath"
 	"strings"

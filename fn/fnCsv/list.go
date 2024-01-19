@@ -2,7 +2,7 @@ package fnCsv
 
 import (
 	"fmt"
-	"github.com/d3v-friends/go-tools/fnParams"
+	"github.com/d3v-friends/go-tools/fn/fnParams"
 )
 
 func CommaString(ls []string, iPadding ...bool) (res string) {

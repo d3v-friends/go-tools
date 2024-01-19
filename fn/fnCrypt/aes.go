@@ -6,7 +6,7 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 	"fmt"
-	"github.com/d3v-friends/go-tools/fnParams"
+	"github.com/d3v-friends/go-tools/fn/fnParams"
 	"io"
 	mRand "math/rand"
 	"time"

@@ -2,7 +2,7 @@ package fnFile
 
 import (
 	"fmt"
-	"github.com/d3v-friends/go-tools/fnParams"
+	"github.com/d3v-friends/go-tools/fn/fnParams"
 	"os"
 	"path/filepath"
 )
