@@ -1,53 +1,56 @@
 package fnGit
 
 import (
+	"context"
 	"errors"
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing/transport/http"
 	"os"
 )
 
-type CloneArgs struct {
-	Repo      string
-	Local     string
-	Username  string
-	AccessKey string
+type GitInfo interface {
+	GetRepository() string
+	GetLocalPath() string
+	GetUsername() string
+	GetAccessKey() string
 }
 
-func Clone(i *CloneArgs) (_ *git.Repository, err error) {
-	if _, err = os.Stat(i.Local); err == nil {
-		if err = os.RemoveAll(i.Local); err != nil {
+func Clone(
+	ctx context.Context,
+	i GitInfo,
+) (err error) {
+	if _, err = os.Stat(i.GetLocalPath()); err == nil {
+		if err = os.RemoveAll(i.GetLocalPath()); err != nil {
 			return
 		}
 	}
 
-	return git.PlainClone(i.Local, false, &git.CloneOptions{
-		URL: i.Repo,
-		Auth: &http.BasicAuth{
-			Username: i.Username,
-			Password: i.AccessKey,
-		},
-	})
+	_, err = git.PlainCloneContext(
+		ctx,
+		i.GetLocalPath(),
+		false,
+		&git.CloneOptions{
+			URL: i.GetRepository(),
+			Auth: &http.BasicAuth{
+				Username: i.GetUsername(),
+				Password: i.GetAccessKey(),
+			},
+		})
+
+	return
 }
 
-type FetchArgs struct {
-	Repo      string
-	Local     string
-	Username  string
-	AccessKey string
-}
-
-func Fetch(i *FetchArgs) (err error) {
+func Fetch(ctx context.Context, i GitInfo) (err error) {
 	var repo *git.Repository
-	if repo, err = git.PlainOpen(i.Local); err != nil {
+	if repo, err = git.PlainOpen(i.GetLocalPath()); err != nil {
 		return
 	}
 
-	err = repo.Fetch(&git.FetchOptions{
-		RemoteURL: i.Repo,
+	err = repo.FetchContext(ctx, &git.FetchOptions{
+		RemoteURL: i.GetRepository(),
 		Auth: &http.BasicAuth{
-			Username: i.Username,
-			Password: i.AccessKey,
+			Username: i.GetUsername(),
+			Password: i.GetAccessKey(),
 		},
 	})
 
