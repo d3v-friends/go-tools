@@ -2,27 +2,21 @@ package fnCsv
 
 import (
 	"fmt"
-	"github.com/d3v-friends/go-tools/fn/fnParams"
+	"strings"
 )
 
-func CommaString(ls []string, iPadding ...bool) (res string) {
-	format := "%s,"
-	hasPadding := fnParams.Get(iPadding)
-
-	if hasPadding {
-		format += " "
-	}
-
+func ToCSV(ls []string) (res string) {
 	for _, item := range ls {
-		res += fmt.Sprintf(format, item)
-
+		res += fmt.Sprintf("%s,", item)
 	}
-
-	if hasPadding {
-		res = res[:len(res)-2]
-	} else {
-		res = res[:len(res)-1]
-	}
-
+	res = res[:len(res)-1]
 	return res
+}
+
+func FromCSV(v string) (ls []string) {
+	ls = strings.Split(v, ",")
+	for i := range ls {
+		ls[i] = strings.Trim(ls[i], " ")
+	}
+	return
 }
