@@ -19,7 +19,7 @@ type Wallet struct {
 	UpdatedAt       time.Time `bson:"index"`
 
 	// ref
-	WalletBalance *WalletBalance `gorm:"foreignKey:Id;references:WalletId"`
+	WalletBalance *WalletBalance `gorm:"foreignKey:WalletBalanceId;references:Id"`
 }
 
 func (x *Wallet) Migrate() []wrGorm.Migrate {
@@ -53,28 +53,22 @@ type FindWalletArgs struct {
 	Lock      *bool
 }
 
-func (x FindWalletArgs) Query(db *gorm.DB) *gorm.DB {
-	var query = db.Model(&Wallet{})
-
+func (x FindWalletArgs) Query(tx *gorm.DB) *gorm.DB {
 	if len(x.Id) != 0 {
-		query = query.Where("`wallets`.`id` IN (?)", x.Id)
+		tx = tx.Where("`wallets`.`id` IN (?)", x.Id)
 	}
 
 	if len(x.AccountId) != 0 {
-		query = query.Where("`wallets`.`account_id` IN (?)", x.AccountId)
+		tx = tx.Where("`wallets`.`account_id` IN (?)", x.AccountId)
 	}
 
 	if x.Lock != nil && *x.Lock {
-		query = query.Clauses(clause.Locking{
+		tx = tx.Clauses(clause.Locking{
 			Strength: "UPDATE",
 		})
 	}
 
-	query = query.
-		Joins("WalletBalance").
-		Order("`wallets`.`created_at` DESC")
-
-	return query
+	return tx
 }
 
 func FindOneWalletCtx(ctx context.Context, i *FindWalletArgs) (*Wallet, error) {
@@ -85,7 +79,11 @@ func FindOneWallet(tx *gorm.DB, i *FindWalletArgs) (wallet *Wallet, err error) {
 	wallet = new(Wallet)
 
 	var rows *gorm.DB
-	if rows = i.Query(tx).Take(wallet); rows.Error != nil {
+	var query = tx.Model(&Wallet{})
+	if rows = i.
+		Query(query).
+		Joins("WalletBalance").
+		Take(wallet); rows.Error != nil {
 		err = rows.Error
 		return
 	}
@@ -97,7 +95,11 @@ func FindAllWallets(tx *gorm.DB, i *FindWalletArgs) (ls Wallets, err error) {
 	var rows *gorm.DB
 	ls = make(Wallets, 0)
 
-	if rows = i.Query(tx).Find(&ls); rows.Error != nil {
+	if rows = i.
+		Query(tx.Model(&Wallet{})).
+		Joins("WalletBalance").
+		Order("`wallets`.`created_at` DESC").
+		Find(&ls); rows.Error != nil {
 		if errors.Is(rows.Error, gorm.ErrEmptySlice) {
 			return
 		}

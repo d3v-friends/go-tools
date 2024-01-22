@@ -77,10 +77,11 @@ func TestWalletUseRequest(test *testing.T) {
 		var wg = &sync.WaitGroup{}
 
 		var totalChargePoint = decimal.Zero
+		wg.Add(int(try))
 		for i := 0; i < int(try); i++ {
-			var chargePoint = decimal.NewFromInt(rand.Int63n(chargePoint))
-			totalChargePoint = totalChargePoint.Add(chargePoint)
-			wg.Add(1)
+			var ch = decimal.NewFromInt(rand.Int63n(chargePoint))
+			totalChargePoint = totalChargePoint.Add(ch)
+
 			go func(w *sync.WaitGroup, c decimal.Decimal, tt *TestTool, wl *Wallet) {
 				fnPanic.On(UseWallet(tt.Context(), &UseWalletArgs{
 					Request: UseWalletRequests{
@@ -95,8 +96,9 @@ func TestWalletUseRequest(test *testing.T) {
 					},
 				}))
 				w.Done()
-			}(wg, chargePoint, tools, account.Wallets[0])
+			}(wg, ch, tools, account.Wallets[0])
 		}
+
 		wg.Wait()
 
 		var loadWallet = fnPanic.Get(FindOneWalletCtx(tools.Context(), &FindWalletArgs{

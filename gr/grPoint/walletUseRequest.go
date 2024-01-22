@@ -116,7 +116,9 @@ func UseWallet(ctx context.Context, i *UseWalletArgs) error {
 				return
 			}
 
-			if wallet.WalletBalance.Point.
+			if wallet.
+				WalletBalance.
+				Point.
 				Add(req.UsePoint).
 				LessThan(decimal.Zero) {
 				err = ErrShortageWalletPoint
@@ -166,6 +168,10 @@ func UseWallet(ctx context.Context, i *UseWalletArgs) error {
 			request.WalletUseReceipt = append(request.WalletUseReceipt, receipt)
 		}
 
-		return i.Fn(ctx, request)
+		if err = i.Fn(ctx, request); err != nil {
+			return
+		}
+
+		return
 	})
 }
