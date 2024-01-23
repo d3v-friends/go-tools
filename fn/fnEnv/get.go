@@ -2,6 +2,8 @@ package fnEnv
 
 import (
 	"fmt"
+	"github.com/d3v-friends/go-tools/fn/fnPanic"
+	"github.com/shopspring/decimal"
 	"os"
 	"strconv"
 )
@@ -24,4 +26,8 @@ func ReadInt(key string) (res int) {
 		panic(err)
 	}
 	return
+}
+
+func ReadDecimal(key string) decimal.Decimal {
+	return fnPanic.Get(decimal.NewFromString(Read(key)))
 }
