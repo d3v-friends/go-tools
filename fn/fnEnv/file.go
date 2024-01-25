@@ -12,7 +12,9 @@ func ReadFromFile(fp string) (err error) {
 		return
 	}
 
-	defer file.Close()
+	defer func() {
+		_ = file.Close()
+	}()
 	var reader = bufio.NewReader(file)
 
 	for {
