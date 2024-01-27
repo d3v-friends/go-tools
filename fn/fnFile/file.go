@@ -2,13 +2,13 @@ package fnFile
 
 import (
 	"fmt"
-	"github.com/d3v-friends/go-tools/fn/fnParams"
+	"github.com/d3v-friends/go-tools/fn/fnParam"
 	"os"
 	"path/filepath"
 )
 
 func New(fp string, force ...bool) (file *os.File, err error) {
-	isForce := fnParams.Get(force)
+	isForce := fnParam.Get(force)
 
 	if err = os.MkdirAll(filepath.Dir(fp), os.ModePerm); err != nil {
 		return

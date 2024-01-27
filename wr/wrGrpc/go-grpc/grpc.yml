@@ -1,7 +1,0 @@
-proto: "../proto"
-out: "../"
-package: "proto"
-include:
-  - "share.proto"
-import:
-#  - "share.proto"

@@ -6,19 +6,20 @@ import (
 )
 
 func Save[DOC any](f *os.File, doc *DOC) error {
-	encoder := yaml.NewEncoder(f)
+	var encoder = yaml.NewEncoder(f)
 	return encoder.Encode(doc)
 }
 
 func Open[DOC any](fp string, doc *DOC) (err error) {
 	var file *os.File
-
 	if file, err = os.Open(fp); err != nil {
 		return
 	}
 
-	defer file.Close()
+	defer func() {
+		_ = file.Close()
+	}()
 
-	decoder := yaml.NewDecoder(file)
+	var decoder = yaml.NewDecoder(file)
 	return decoder.Decode(doc)
 }

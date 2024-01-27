@@ -25,7 +25,7 @@ func (x Path) Path() (path string, err error) {
 }
 
 func (x Path) PathP() string {
-	return fnPanic.OnValue(x.Path())
+	return fnPanic.Get(x.Path())
 }
 
 func (x Path) LinuxPath() (path string, err error) {
@@ -37,7 +37,7 @@ func (x Path) LinuxPath() (path string, err error) {
 }
 
 func (x Path) LinuxPathP() string {
-	return fnPanic.OnValue(x.LinuxPath())
+	return fnPanic.Get(x.LinuxPath())
 }
 
 func (x Path) WindowsPath() (path string, err error) {
@@ -49,7 +49,7 @@ func (x Path) WindowsPath() (path string, err error) {
 }
 
 func (x Path) WindowsPathP() string {
-	return fnPanic.OnValue(x.WindowsPath())
+	return fnPanic.Get(x.WindowsPath())
 }
 
 func (x Path) String() string {

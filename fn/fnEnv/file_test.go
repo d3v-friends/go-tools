@@ -9,11 +9,11 @@ func TestFile(test *testing.T) {
 
 	test.Run("read", func(t *testing.T) {
 		var err error
-		if err = ReadFromFile("./.env"); err != nil {
+		if err = Load("./.env"); err != nil {
 			test.Fatal(err)
 		}
 
-		assert.Equal(t, "10000", Read("PORT"))
-		assert.Equal(t, "www.mongodb.com", Read("MG_HOST"))
+		assert.Equal(t, "10000", GetString("PORT"))
+		assert.Equal(t, "www.mongodb.com", GetString("MG_HOST"))
 	})
 }

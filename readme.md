@@ -7,9 +7,7 @@
 
 * 접두어 정보
 
-| prefix | mean                                   | etc |
-|--------|----------------------------------------|-----|
-| fn*    | pure golang functions                  |     |
-| wr*    | wrapping libs, code snippets           |     |
-| mg*    | collection definition for mongo driver |     |
-| gr*    | table definition for gorm              |     |
+| prefix | mean                  | etc |
+|--------|-----------------------|-----|
+| fn*    | pure golang functions |     |
+| typ    | shared type           |     |
