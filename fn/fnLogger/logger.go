@@ -22,14 +22,21 @@ func NewLogger(requestIds ...string) (res *log.Logger) {
 	return
 }
 
-func Set(ctx context.Context, logger *log.Logger) context.Context {
+func Set(
+	ctx context.Context,
+	logger *log.Logger,
+) context.Context {
 	return context.WithValue(ctx, CtxLogger, logger)
 }
 
-func Get(ctx context.Context) (res *log.Logger, err error) {
+func Get(
+	ctx context.Context,
+) (res *log.Logger, err error) {
 	return fnCtx.Get[*log.Logger](ctx, CtxLogger, ErrNotFoundLoggerInContext)
 }
 
-func GetP(ctx context.Context) (res *log.Logger) {
+func GetP(
+	ctx context.Context,
+) (res *log.Logger) {
 	return fnCtx.GetP[*log.Logger](ctx, CtxLogger, ErrNotFoundLoggerInContext)
 }
