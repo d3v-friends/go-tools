@@ -9,30 +9,25 @@ const (
 	ErrNotFoundElement = "not_found_element"
 )
 
-func Has[T any](ls []T, matcher func(v T) bool) bool {
-	for _, v := range ls {
-		if matcher(v) {
+func Has[T any](
+	vs []T,
+	fn func(v T) bool,
+) bool {
+	for _, v := range vs {
+		if fn(v) {
 			return true
 		}
 	}
 	return false
 }
 
-func Filter[T any](ls []T, fn func(v T) bool) (res []T) {
-	res = make([]T, 0)
-	for _, v := range ls {
-		if !fn(v) {
-			continue
-		}
-		res = append(res, v)
-	}
-	return
-}
-
-func Find[T any](vs []T, matcher func(v T) bool) (ls []T) {
+func Filter[T any](
+	vs []T,
+	fn func(v T) bool,
+) (ls []T) {
 	ls = make([]T, 0)
 	for _, v := range vs {
-		if !matcher(v) {
+		if !fn(v) {
 			continue
 		}
 		ls = append(ls, v)
@@ -40,9 +35,26 @@ func Find[T any](vs []T, matcher func(v T) bool) (ls []T) {
 	return
 }
 
-func FindOne[T any](vs []T, matcher func(v T) bool) (res T, err error) {
+func Find[T any](
+	vs []T,
+	fn func(v T) bool,
+) (ls []T) {
+	ls = make([]T, 0)
 	for _, v := range vs {
-		if matcher(v) {
+		if !fn(v) {
+			continue
+		}
+		ls = append(ls, v)
+	}
+	return
+}
+
+func FindOne[T any](
+	vs []T,
+	fn func(v T) bool,
+) (res T, err error) {
+	for _, v := range vs {
+		if fn(v) {
 			res = v
 			return
 		}
@@ -51,7 +63,9 @@ func FindOne[T any](vs []T, matcher func(v T) bool) (res T, err error) {
 	return
 }
 
-func Concat[T any](vs ...[]T) (res []T) {
+func Concat[T any](
+	vs ...[]T,
+) (res []T) {
 	res = make([]T, 0)
 
 	for _, v := range vs {
@@ -61,26 +75,45 @@ func Concat[T any](vs ...[]T) (res []T) {
 	return
 }
 
-func Divide[T any](ls []T, unit int) (res [][]T) {
+func Divide[T any](
+	vs []T,
+	unit int,
+) (res [][]T) {
 	res = make([][]T, 0)
 
-	var page = len(ls) / unit
-	if len(ls)%unit != 0 {
+	var page = len(vs) / unit
+	if len(vs)%unit != 0 {
 		page += 1
 	}
 
 	for i := 0; i < page; i++ {
 		if i == page-1 {
-			res = append(res, ls[i*unit:])
+			res = append(res, vs[i*unit:])
 		} else {
-			res = append(res, ls[i*unit:(i+1)*unit])
+			res = append(res, vs[i*unit:(i+1)*unit])
 		}
 	}
 
 	return
 }
 
-func Deduplicate[T any](vs []T, isSame func(a T, b T) bool) (res []T) {
+func Parse[A, B any](
+	vs []A,
+	parser func(v A) (B, error),
+) (ls []B, err error) {
+	ls = make([]B, len(vs))
+	for i, v := range vs {
+		if ls[i], err = parser(v); err != nil {
+			return
+		}
+	}
+	return
+}
+
+func Deduplicate[T any](
+	vs []T,
+	isSame func(a T, b T) bool,
+) (res []T) {
 	res = make([]T, 0)
 	for _, in := range vs {
 		var has = false
@@ -112,7 +145,9 @@ func Map[K comparable, V, R any](
 	return
 }
 
-func ShuffleKnuth[T any](vs []T) (res []T) {
+func ShuffleKnuth[T any](
+	vs []T,
+) (res []T) {
 	res = make([]T, len(vs))
 	for i, v := range vs {
 		res[i] = v
