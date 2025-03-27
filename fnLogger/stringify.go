@@ -6,17 +6,16 @@ import (
 	"reflect"
 )
 
+const (
+	ErrCannotMarshalMessage = "cannot_marshal_message"
+)
+
 func stringify(message any) string {
 	var vo = reflect.ValueOf(message)
 	if vo.Kind() == reflect.Pointer {
 		if !vo.CanInterface() {
 			return ""
 		}
-	}
-
-	var stringer, ok = message.(fmt.Stringer)
-	if ok {
-		return stringer.String()
 	}
 
 	switch t := message.(type) {
@@ -26,10 +25,12 @@ func stringify(message any) string {
 		return *t
 	case error:
 		return t.Error()
+	case fmt.Stringer:
+		return t.String()
 	default:
 		var body, err = json.Marshal(message)
 		if err != nil {
-			return "cannot_marshal_message"
+			return ErrCannotMarshalMessage
 		}
 		return string(body)
 	}
