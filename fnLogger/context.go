@@ -35,3 +35,26 @@ func GetID(ctx context.Context) (id *CtxID, err error) {
 func GetIDP(ctx context.Context) *CtxID {
 	return fnCtx.GetP(ctx, CtxKeyId)
 }
+
+func SetLogger(
+	ctx context.Context,
+	loggers ...Logger,
+) context.Context {
+	if len(loggers) == 1 {
+		return fnCtx.Set(ctx, CtxKeyLogger, loggers[0])
+	}
+	return fnCtx.Set(ctx, CtxKeyLogger, NewLogger(LogLevelInfo))
+}
+
+func GetLogger(
+	ctxes ...context.Context,
+) (logger Logger) {
+	if len(ctxes) == 1 {
+		var err error
+		if logger, err = fnCtx.Get(ctxes[0], CtxKeyLogger); err == nil {
+			return
+		}
+	}
+	logger = NewLogger(LogLevelInfo)
+	return
+}
