@@ -110,6 +110,17 @@ func Parse[A, B any](
 	return
 }
 
+func Each[A, B any](
+	vs []A,
+	parser func(v A) B,
+) (ls []B) {
+	ls = make([]B, len(vs))
+	for i, v := range vs {
+		ls[i] = parser(v)
+	}
+	return
+}
+
 func Deduplicate[T any](
 	vs []T,
 	isSame func(a T, b T) bool,
