@@ -166,10 +166,8 @@ func ShuffleKnuth[T any](
 
 	var total = len(vs)
 	for i := 0; i < total; i++ {
-		var c = res[i]
 		var nextIdx = i + rand.IntN(total-i)
-		res[i] = res[nextIdx]
-		res[nextIdx] = c
+		res[i], res[nextIdx] = res[nextIdx], res[i]
 	}
 
 	return
