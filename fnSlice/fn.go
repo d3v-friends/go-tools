@@ -63,6 +63,18 @@ func FindOne[T any](
 	return
 }
 
+func FindIndex[T any](
+	vs []T,
+	fn func(v T) bool,
+) int {
+	for i, v := range vs {
+		if fn(v) {
+			return i
+		}
+	}
+	return -1
+}
+
 func Concat[T any](
 	vs ...[]T,
 ) (res []T) {
