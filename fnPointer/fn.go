@@ -12,7 +12,7 @@ func IsNil(v any) bool {
 		return false
 	}
 
-	return vo.CanInterface()
+	return vo.IsNil()
 }
 
 func Default[T any](value *T, defs T) *T {
