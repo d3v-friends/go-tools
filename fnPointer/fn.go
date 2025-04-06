@@ -7,12 +7,12 @@ func Make[T any](v T) *T {
 }
 
 func IsNil(v any) bool {
-	if reflect.TypeOf(v).Kind() != reflect.Pointer {
+	var vo = reflect.ValueOf(v)
+	if vo.Kind() != reflect.Pointer {
 		return false
 	}
 
-	var vo = reflect.ValueOf(v)
-	return vo.IsNil()
+	return vo.CanInterface()
 }
 
 func Default[T any](value *T, defs T) *T {
