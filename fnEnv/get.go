@@ -131,3 +131,24 @@ func Int(key string, defaultValues ...int) int {
 	}
 	return i
 }
+
+func Uint64(key string, defaultValues ...uint64) uint64 {
+	var str = os.Getenv(key)
+	if str == "" {
+		if len(defaultValues) == 1 {
+			return defaultValues[0]
+		}
+		panic(fnError.NewFields(ErrNotFoundEnv, map[string]any{
+			"key": key,
+		}))
+	}
+
+	var d, err = decimal.NewFromString(str)
+	if err != nil {
+		panic(fnError.NewFields(ErrInvalidDecimalValue, map[string]any{
+			"key":   key,
+			"value": str,
+		}))
+	}
+	return uint64(d.IntPart())
+}
