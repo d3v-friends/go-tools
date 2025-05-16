@@ -2,10 +2,14 @@ package fnCase
 
 import "strings"
 
+// CamelCase
+// 영문문자열을 카멜케이스로 바꿔주는 함수
 func CamelCase(v string) string {
 	return camelCase(v, false)
 }
 
+// PascalCase
+// 영문문자열을 파스칼케이스로 바꿔주는 함수
 func PascalCase(v string) string {
 	return camelCase(v, true)
 }
