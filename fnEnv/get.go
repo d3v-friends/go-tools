@@ -4,11 +4,13 @@
 package fnEnv
 
 import (
+	"encoding/json"
+	"os"
+	"strconv"
+
 	"github.com/d3v-friends/go-tools/fnError"
 	"github.com/shopspring/decimal"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"os"
-	"strconv"
 )
 
 const (
@@ -151,4 +153,27 @@ func Uint64(key string, defaultValues ...uint64) uint64 {
 		}))
 	}
 	return uint64(d.IntPart())
+}
+
+func Json[T any](key string, defs ...T) (res T) {
+	var str = os.Getenv(key)
+	if str == "" {
+		if len(defs) == 1 {
+			return defs[0]
+		}
+		panic(fnError.NewFields(ErrNotFoundEnv, map[string]any{
+			"key": key,
+		}))
+	}
+
+	res = *new(T)
+	var err = json.Unmarshal([]byte(str), &res)
+	if err != nil {
+		panic(fnError.NewFields(ErrNotFoundEnv, map[string]any{
+			"key":   key,
+			"error": err.Error(),
+		}))
+	}
+
+	return
 }
