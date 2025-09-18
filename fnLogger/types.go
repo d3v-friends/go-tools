@@ -107,9 +107,9 @@ func (x LogLevel) String() string {
 	case LogLevelDebug:
 		return "DEBUG"
 	case LogLevelInfo:
-		return "INFO"
+		return "INFO_"
 	case LogLevelWarn:
-		return "WARN"
+		return "WARN_"
 	case LogLevelError:
 		return "ERROR"
 	case LogLevelFatal:

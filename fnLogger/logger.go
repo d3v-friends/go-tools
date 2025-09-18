@@ -2,12 +2,13 @@ package fnLogger
 
 import (
 	"context"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"log"
 	"os"
 	"runtime"
 	"strings"
 	"time"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type DefaultLogger struct {
@@ -39,42 +40,42 @@ func (x *DefaultLogger) CtxTrace(ctx context.Context, message any, colors ...Col
 	if x.level < LogLevelTrace {
 		return
 	}
-	x.print(ctx, message, colors...)
+	x.print(ctx, LogLevelTrace, message, colors...)
 }
 
 func (x *DefaultLogger) CtxDebug(ctx context.Context, message any, colors ...ColorKey) {
 	if x.level < LogLevelDebug {
 		return
 	}
-	x.print(ctx, message, colors...)
+	x.print(ctx, LogLevelDebug, message, colors...)
 }
 
 func (x *DefaultLogger) CtxInfo(ctx context.Context, message any, colors ...ColorKey) {
 	if x.level < LogLevelInfo {
 		return
 	}
-	x.print(ctx, message, colors...)
+	x.print(ctx, LogLevelInfo, message, colors...)
 }
 
 func (x *DefaultLogger) CtxWarn(ctx context.Context, message any, colors ...ColorKey) {
 	if x.level < LogLevelWarn {
 		return
 	}
-	x.print(ctx, message, colors...)
+	x.print(ctx, LogLevelWarn, message, colors...)
 }
 
 func (x *DefaultLogger) CtxError(ctx context.Context, message any, colors ...ColorKey) {
 	if x.level < LogLevelError {
 		return
 	}
-	x.print(ctx, message, colors...)
+	x.print(ctx, LogLevelError, message, colors...)
 }
 
 func (x *DefaultLogger) CtxFatal(ctx context.Context, message any, colors ...ColorKey) {
 	if x.level < LogLevelFatal {
 		return
 	}
-	x.print(ctx, message, colors...)
+	x.print(ctx, LogLevelFatal, message, colors...)
 }
 
 func (x *DefaultLogger) Trace(message any, colors ...ColorKey) {
@@ -101,7 +102,12 @@ func (x *DefaultLogger) Fatal(message any, colors ...ColorKey) {
 	x.CtxFatal(context.TODO(), message, colors...)
 }
 
-func (x *DefaultLogger) print(ctx context.Context, message any, colors ...ColorKey) {
+func (x *DefaultLogger) print(
+	ctx context.Context,
+	level LogLevel,
+	message any,
+	colors ...ColorKey,
+) {
 	var id, err = GetID(ctx)
 	if err != nil {
 		id = &CtxID{
@@ -116,7 +122,14 @@ func (x *DefaultLogger) print(ctx context.Context, message any, colors ...ColorK
 		color = colors[0]
 	}
 
-	x.stdout.Printf("[%s][%s]\t\t %s [%s](%d)", id.Id, x.level.log(), color.log(stringify(message)), loc, line)
+	x.stdout.Printf(
+		"[%s][%s]\t%s [%s](%d)",
+		id.Id,
+		level.log(),
+		color.log(stringify(message)),
+		loc,
+		line,
+	)
 }
 
 func (x *DefaultLogger) getLocation() (loc string, line int) {
