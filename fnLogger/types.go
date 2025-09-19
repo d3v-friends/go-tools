@@ -115,7 +115,7 @@ func (x LogLevel) String() string {
 	case LogLevelFatal:
 		return "FATAL"
 	default:
-		return "INFO"
+		return "INFO_"
 	}
 }
 

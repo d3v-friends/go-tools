@@ -2,6 +2,7 @@ package fnLogger
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"os"
 	"runtime"
@@ -40,42 +41,42 @@ func (x *DefaultLogger) CtxTrace(ctx context.Context, message any, colors ...Col
 	if x.level < LogLevelTrace {
 		return
 	}
-	x.print(ctx, LogLevelTrace, message, colors...)
+	x.print(ctx, LogLevelTrace, message, false, colors...)
 }
 
 func (x *DefaultLogger) CtxDebug(ctx context.Context, message any, colors ...ColorKey) {
 	if x.level < LogLevelDebug {
 		return
 	}
-	x.print(ctx, LogLevelDebug, message, colors...)
+	x.print(ctx, LogLevelDebug, message, false, colors...)
 }
 
 func (x *DefaultLogger) CtxInfo(ctx context.Context, message any, colors ...ColorKey) {
 	if x.level < LogLevelInfo {
 		return
 	}
-	x.print(ctx, LogLevelInfo, message, colors...)
+	x.print(ctx, LogLevelInfo, message, false, colors...)
 }
 
 func (x *DefaultLogger) CtxWarn(ctx context.Context, message any, colors ...ColorKey) {
 	if x.level < LogLevelWarn {
 		return
 	}
-	x.print(ctx, LogLevelWarn, message, colors...)
+	x.print(ctx, LogLevelWarn, message, true, colors...)
 }
 
 func (x *DefaultLogger) CtxError(ctx context.Context, message any, colors ...ColorKey) {
 	if x.level < LogLevelError {
 		return
 	}
-	x.print(ctx, LogLevelError, message, colors...)
+	x.print(ctx, LogLevelError, message, true, colors...)
 }
 
 func (x *DefaultLogger) CtxFatal(ctx context.Context, message any, colors ...ColorKey) {
 	if x.level < LogLevelFatal {
 		return
 	}
-	x.print(ctx, LogLevelFatal, message, colors...)
+	x.print(ctx, LogLevelFatal, message, true, colors...)
 }
 
 func (x *DefaultLogger) Trace(message any, colors ...ColorKey) {
@@ -106,6 +107,7 @@ func (x *DefaultLogger) print(
 	ctx context.Context,
 	level LogLevel,
 	message any,
+	showLineNumber bool,
 	colors ...ColorKey,
 ) {
 	var id, err = GetID(ctx)
@@ -122,14 +124,17 @@ func (x *DefaultLogger) print(
 		color = colors[0]
 	}
 
-	x.stdout.Printf(
-		"[%s][%s]\t%s [%s](%d)",
+	var log = fmt.Sprintf("[%s][%s]\t%s",
 		id.Id,
 		level.log(),
 		color.log(stringify(message)),
-		loc,
-		line,
 	)
+
+	if showLineNumber {
+		log = fmt.Sprintf("%s [%s](%d)", log, loc, line)
+	}
+
+	x.stdout.Printf(log)
 }
 
 func (x *DefaultLogger) getLocation() (loc string, line int) {
