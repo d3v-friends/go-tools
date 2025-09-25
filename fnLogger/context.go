@@ -2,9 +2,10 @@ package fnLogger
 
 import (
 	"context"
+	"time"
+
 	"github.com/d3v-friends/go-tools/fnCtx"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"time"
 )
 
 const (
@@ -57,4 +58,8 @@ func GetLogger(
 	}
 	logger = NewLogger(LogLevelInfo)
 	return
+}
+
+func Get(ctx context.Context) (logger Logger) {
+	return GetLogger(ctx)
 }
