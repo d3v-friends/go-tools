@@ -37,69 +37,69 @@ func (x *DefaultLogger) SetLevel(level LogLevel) {
 	x.level = level
 }
 
-func (x *DefaultLogger) CtxTrace(ctx context.Context, message any, colors ...ColorKey) {
+func (x *DefaultLogger) CtxTrace(ctx context.Context, message any, groups ...LogGroup) {
 	if x.level < LogLevelTrace {
 		return
 	}
-	x.print(ctx, LogLevelTrace, message, false, colors...)
+	x.print(ctx, LogLevelTrace, message, false, groups...)
 }
 
-func (x *DefaultLogger) CtxDebug(ctx context.Context, message any, colors ...ColorKey) {
+func (x *DefaultLogger) CtxDebug(ctx context.Context, message any, groups ...LogGroup) {
 	if x.level < LogLevelDebug {
 		return
 	}
-	x.print(ctx, LogLevelDebug, message, false, colors...)
+	x.print(ctx, LogLevelDebug, message, false, groups...)
 }
 
-func (x *DefaultLogger) CtxInfo(ctx context.Context, message any, colors ...ColorKey) {
+func (x *DefaultLogger) CtxInfo(ctx context.Context, message any, groups ...LogGroup) {
 	if x.level < LogLevelInfo {
 		return
 	}
-	x.print(ctx, LogLevelInfo, message, false, colors...)
+	x.print(ctx, LogLevelInfo, message, false, groups...)
 }
 
-func (x *DefaultLogger) CtxWarn(ctx context.Context, message any, colors ...ColorKey) {
+func (x *DefaultLogger) CtxWarn(ctx context.Context, message any, groups ...LogGroup) {
 	if x.level < LogLevelWarn {
 		return
 	}
-	x.print(ctx, LogLevelWarn, message, true, colors...)
+	x.print(ctx, LogLevelWarn, message, true, groups...)
 }
 
-func (x *DefaultLogger) CtxError(ctx context.Context, message any, colors ...ColorKey) {
+func (x *DefaultLogger) CtxError(ctx context.Context, message any, groups ...LogGroup) {
 	if x.level < LogLevelError {
 		return
 	}
-	x.print(ctx, LogLevelError, message, true, colors...)
+	x.print(ctx, LogLevelError, message, true, groups...)
 }
 
-func (x *DefaultLogger) CtxFatal(ctx context.Context, message any, colors ...ColorKey) {
+func (x *DefaultLogger) CtxFatal(ctx context.Context, message any, groups ...LogGroup) {
 	if x.level < LogLevelFatal {
 		return
 	}
-	x.print(ctx, LogLevelFatal, message, true, colors...)
+	x.print(ctx, LogLevelFatal, message, true, groups...)
 }
 
-func (x *DefaultLogger) Trace(message any, colors ...ColorKey) {
+func (x *DefaultLogger) Trace(message any, colors ...LogGroup) {
 	x.CtxTrace(context.TODO(), message, colors...)
 }
 
-func (x *DefaultLogger) Debug(message any, colors ...ColorKey) {
+func (x *DefaultLogger) Debug(message any, colors ...LogGroup) {
 	x.CtxDebug(context.TODO(), message, colors...)
 }
 
-func (x *DefaultLogger) Info(message any, colors ...ColorKey) {
+func (x *DefaultLogger) Info(message any, colors ...LogGroup) {
 	x.CtxInfo(context.TODO(), message, colors...)
 }
 
-func (x *DefaultLogger) Warn(message any, colors ...ColorKey) {
+func (x *DefaultLogger) Warn(message any, colors ...LogGroup) {
 	x.CtxWarn(context.TODO(), message, colors...)
 }
 
-func (x *DefaultLogger) Error(message any, colors ...ColorKey) {
+func (x *DefaultLogger) Error(message any, colors ...LogGroup) {
 	x.CtxError(context.TODO(), message, colors...)
 }
 
-func (x *DefaultLogger) Fatal(message any, colors ...ColorKey) {
+func (x *DefaultLogger) Fatal(message any, colors ...LogGroup) {
 	x.CtxFatal(context.TODO(), message, colors...)
 }
 
@@ -108,7 +108,7 @@ func (x *DefaultLogger) print(
 	level LogLevel,
 	message any,
 	showLineNumber bool,
-	colors ...ColorKey,
+	groups ...LogGroup,
 ) {
 	var id, err = GetID(ctx)
 	if err != nil {
@@ -118,23 +118,26 @@ func (x *DefaultLogger) print(
 		}
 	}
 
-	var loc, line = x.getLocation()
-	var color = ColorKeyGray
-	if len(colors) == 1 {
-		color = colors[0]
+	var group = NilLogGroup
+	if len(groups) == 1 {
+		group = groups[0]
 	}
 
-	var log = fmt.Sprintf("[%s][%s]\t%s",
-		id.Id,
+	var loc, line = x.getLocation()
+	var color = ColorKeyGray
+
+	var str = fmt.Sprintf("[%s]%s[%s]\t%s",
 		level.log(),
+		group.String(),
+		id.Id,
 		color.log(stringify(message)),
 	)
 
 	if showLineNumber {
-		log = fmt.Sprintf("%s [%s](%d)", log, loc, line)
+		str = fmt.Sprintf("%s [%s](%d)", str, loc, line)
 	}
 
-	x.stdout.Printf(log)
+	x.stdout.Print(str)
 }
 
 func (x *DefaultLogger) getLocation() (loc string, line int) {

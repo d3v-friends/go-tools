@@ -3,23 +3,61 @@ package fnLogger
 import (
 	"context"
 	"fmt"
+	"regexp"
 	"strings"
 )
 
+type LogGroup struct {
+	name  string
+	color ColorKey
+}
+
+var NilLogGroup = LogGroup{
+	name:  "__________",
+	color: ColorKeyGray,
+}
+
+// NewLogGroup
+// name 은 영문알파벳, 숫자포함 10글자까지 인식한다.
+// 영문알파벳은 모두 대문자로 변경된다.
+func NewLogGroup(name string, colors ...ColorKey) LogGroup {
+	var color = ColorKeyGray
+	if len(colors) == 1 {
+		color = colors[0]
+	}
+
+	var size = 10
+	name = regexp.MustCompile("[^a-zA-Z0-9_-]+").ReplaceAllString(name, "")
+	if len(name) < size {
+		name = name + strings.Repeat("_", size-len(name))
+	} else {
+		name = name[:size]
+	}
+
+	return LogGroup{
+		name:  strings.ToUpper(name),
+		color: color,
+	}
+}
+
+func (x LogGroup) String() string {
+	return fmt.Sprintf("[%s]", x.color.log(x.name))
+}
+
 type Logger interface {
 	SetLevel(level LogLevel)
-	CtxTrace(ctx context.Context, message any, colors ...ColorKey)
-	Trace(message any, colors ...ColorKey)
-	CtxDebug(ctx context.Context, message any, colors ...ColorKey)
-	Debug(message any, colors ...ColorKey)
-	CtxInfo(ctx context.Context, message any, colors ...ColorKey)
-	Info(message any, colors ...ColorKey)
-	CtxWarn(ctx context.Context, message any, colors ...ColorKey)
-	Warn(message any, colors ...ColorKey)
-	CtxError(ctx context.Context, message any, colors ...ColorKey)
-	Error(message any, colors ...ColorKey)
-	CtxFatal(ctx context.Context, message any, colors ...ColorKey)
-	Fatal(message any, colors ...ColorKey)
+	CtxTrace(ctx context.Context, message any, colors ...LogGroup)
+	Trace(message any, colors ...LogGroup)
+	CtxDebug(ctx context.Context, message any, colors ...LogGroup)
+	Debug(message any, colors ...LogGroup)
+	CtxInfo(ctx context.Context, message any, colors ...LogGroup)
+	Info(message any, colors ...LogGroup)
+	CtxWarn(ctx context.Context, message any, colors ...LogGroup)
+	Warn(message any, colors ...LogGroup)
+	CtxError(ctx context.Context, message any, colors ...LogGroup)
+	Error(message any, colors ...LogGroup)
+	CtxFatal(ctx context.Context, message any, colors ...LogGroup)
+	Fatal(message any, colors ...LogGroup)
 }
 
 type ColorKey string
