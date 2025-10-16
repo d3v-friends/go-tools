@@ -1,6 +1,7 @@
 package fnTime_test
 
 import (
+	"fmt"
 	"testing"
 	"time"
 
@@ -25,5 +26,9 @@ func TestTrim(test *testing.T) {
 
 		var y = fnTime.TrimY(value)
 		assert.Equal(t, "2025-01-01T00:00:00Z", y.Format(time.RFC3339))
+
+		var now = time.Now()
+		fmt.Printf("%s\n", fnTime.TrimYMDH(now))
+		fmt.Printf("%s\n", fnTime.TrimYMD(now))
 	})
 }
