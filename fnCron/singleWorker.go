@@ -7,8 +7,6 @@ import (
 	"github.com/d3v-friends/go-tools/fnLogger"
 )
 
-var logGroup = fnLogger.NewLogGroup("CRON", fnLogger.ColorKeyYellow)
-
 type SingleWorker struct {
 	ch               *time.Ticker
 	contextGenerator ContextGenerator
@@ -34,6 +32,8 @@ func NewSingleWorker(cg ContextGenerator, job Job) *SingleWorker {
 // Wait
 // main 문에서 goroutine 으로 대기 시킨다.
 func (x *SingleWorker) Wait() {
+	var logGroup = fnLogger.NewLogGroup(x.job.GetName(), fnLogger.ColorKeyYellow)
+
 	for now := range x.ch.C {
 		if !x.job.IsRun(now) {
 			continue
