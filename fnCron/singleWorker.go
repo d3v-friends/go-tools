@@ -11,6 +11,7 @@ type SingleWorker struct {
 	ch               *time.Ticker
 	contextGenerator ContextGenerator
 	job              Job
+	logGroup         fnLogger.LogGroup
 }
 
 type ContextGenerator func(ctx context.Context) context.Context
@@ -26,42 +27,45 @@ func NewSingleWorker(cg ContextGenerator, job Job) *SingleWorker {
 		ch:               time.NewTicker(time.Second),
 		contextGenerator: cg,
 		job:              job,
+		logGroup:         fnLogger.NewLogGroup(job.GetName(), fnLogger.ColorKeyYellow),
 	}
 }
 
 // Wait
 // main 문에서 goroutine 으로 대기 시킨다.
 func (x *SingleWorker) Wait() {
-	var logGroup = fnLogger.NewLogGroup(x.job.GetName(), fnLogger.ColorKeyYellow)
-
 	for now := range x.ch.C {
 		if !x.job.IsRun(now) {
 			continue
 		}
-		var startAt = time.Now()
-		var ctx = x.contextGenerator(context.TODO())
-		var err = x.job.Do(ctx)
+		x.Run()
+	}
+}
 
-		if err != nil {
-			fnLogger.GetLogger(ctx).CtxError(
-				ctx,
-				map[string]any{
-					"job":      x.job.GetName(),
-					"duration": time.Since(startAt).Milliseconds(),
-					"err":      err.Error(),
-				},
-				logGroup,
-			)
-			continue
-		}
+func (x *SingleWorker) Run() {
+	var startAt = time.Now()
+	var ctx = x.contextGenerator(context.TODO())
+	var err = x.job.Do(ctx)
 
-		fnLogger.GetLogger(ctx).CtxInfo(
+	if err != nil {
+		fnLogger.GetLogger(ctx).CtxError(
 			ctx,
 			map[string]any{
 				"job":      x.job.GetName(),
 				"duration": time.Since(startAt).Milliseconds(),
+				"err":      err.Error(),
 			},
-			logGroup,
+			x.logGroup,
 		)
+		return
 	}
+
+	fnLogger.GetLogger(ctx).CtxInfo(
+		ctx,
+		map[string]any{
+			"job":      x.job.GetName(),
+			"duration": time.Since(startAt).Milliseconds(),
+		},
+		x.logGroup,
+	)
 }
