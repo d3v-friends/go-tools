@@ -1,4 +1,4 @@
-upmod:
+up:
 	go get -u all
 	go mod tidy
 tag:
