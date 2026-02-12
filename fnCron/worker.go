@@ -30,6 +30,7 @@ func (x *Worker) Wait() {
 
 		for _, job := range x.jobs {
 			if !job.IsRun(now) {
+				wg.Done()
 				continue
 			}
 			go do(ctx, job, wg)
