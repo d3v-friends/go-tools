@@ -59,13 +59,4 @@ func (x *SingleWorker) Run() {
 		)
 		return
 	}
-
-	fnLogger.GetLogger(ctx).CtxInfo(
-		ctx,
-		map[string]any{
-			"job":      x.job.GetName(),
-			"duration": time.Since(startAt).Milliseconds(),
-		},
-		x.logGroup,
-	)
 }
