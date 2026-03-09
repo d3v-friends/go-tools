@@ -60,12 +60,4 @@ func do(ctx context.Context, job Job, wg *sync.WaitGroup) {
 		)
 		return
 	}
-
-	logger.CtxInfo(
-		ctx,
-		map[string]any{
-			"duration": time.Since(startAt).Milliseconds(),
-		},
-		logGroup,
-	)
 }
