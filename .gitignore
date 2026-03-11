@@ -3,6 +3,7 @@
 .vscode
 .fleet
 .idea
+version
 
 # idea run
 .run
