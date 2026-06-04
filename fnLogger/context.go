@@ -65,9 +65,7 @@ func GetContextLogger(ctx context.Context) (logger ContextLogger) {
 	var logLevel = NewLogLevel(fnEnv.String("LOG_LEVEL", "INFO"))
 	return NewContextLogger(
 		ctx,
-		LogGroup{name: "",
-			color: ColorKeyWhite,
-		},
+		NilLogGroup,
 		logLevel,
 	)
 }

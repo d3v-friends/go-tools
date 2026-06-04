@@ -44,6 +44,10 @@ func (x LogGroup) String() string {
 	return fmt.Sprintf("[%s]", x.color.log(x.name))
 }
 
+func (x LogGroup) Name() string {
+	return x.name
+}
+
 type Logger interface {
 	SetLevel(level LogLevel)
 	CtxTrace(ctx context.Context, message any, colors ...LogGroup)
