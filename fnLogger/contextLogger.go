@@ -16,16 +16,22 @@ type DefaultContextLogger struct {
 	ctx    context.Context
 }
 
-func (x *DefaultContextLogger) SetLevel(level LogLevel) {
+func (x *DefaultContextLogger) SetLevel(
+	level LogLevel,
+) ContextLogger {
 	x.mutex.Lock()
 	x.level = level
 	x.mutex.Unlock()
+	return x
 }
 
-func (x *DefaultContextLogger) SetLogGroup(group LogGroup) {
+func (x *DefaultContextLogger) SetGroup(
+	group LogGroup,
+) ContextLogger {
 	x.mutex.Lock()
 	x.group = group
 	x.mutex.Unlock()
+	return x
 }
 
 func (x *DefaultContextLogger) Trace(message any) {

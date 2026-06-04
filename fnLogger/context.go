@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/d3v-friends/go-tools/fnCtx"
-	"github.com/d3v-friends/go-tools/fnDefault"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -61,20 +60,12 @@ func GetLogger(
 	return
 }
 
-type ContextLoggerOptions struct {
-	LogGroup LogGroup
-	LogLevel LogLevel
-}
-
-var DefaultContextLoggerOptions = &ContextLoggerOptions{
-	LogGroup: LogGroup{
-		name:  "",
-		color: ColorKeyWhite,
-	},
-	LogLevel: LogLevelInfo,
-}
-
-func GetContextLogger(ctx context.Context, options ...*ContextLoggerOptions) (logger ContextLogger) {
-	var opt = fnDefault.Param(options, DefaultContextLoggerOptions)
-	return NewContextLogger(ctx, opt.LogGroup, opt.LogLevel)
+func GetContextLogger(ctx context.Context) (logger ContextLogger) {
+	return NewContextLogger(
+		ctx,
+		LogGroup{name: "",
+			color: ColorKeyWhite,
+		},
+		LogLevelInfo,
+	)
 }

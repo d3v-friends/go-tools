@@ -61,8 +61,8 @@ type Logger interface {
 }
 
 type ContextLogger interface {
-	SetLevel(level LogLevel)
-	SetLogGroup(group LogGroup)
+	SetLevel(level LogLevel) ContextLogger
+	SetGroup(group LogGroup) ContextLogger
 	Trace(message any)
 	Debug(message any)
 	Info(message any)
