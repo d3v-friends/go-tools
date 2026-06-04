@@ -33,7 +33,7 @@ func (x *Worker) Wait() {
 				wg.Done()
 				continue
 			}
-			go do(ctx, job, wg)
+			go do(ctx, job, wg, now)
 		}
 
 		wg.Wait()
@@ -41,13 +41,13 @@ func (x *Worker) Wait() {
 
 }
 
-func do(ctx context.Context, job Job, wg *sync.WaitGroup) {
+func do(ctx context.Context, job Job, wg *sync.WaitGroup, now time.Time) {
 	defer wg.Done()
 
 	var startAt = time.Now()
 	var logGroup = fnLogger.NewLogGroup(job.GetName(), fnLogger.ColorKeyYellow)
 	var logger = fnLogger.GetLogger(ctx)
-	var err = job.Do(ctx)
+	var err = job.Do(ctx, now)
 
 	if err != nil {
 		logger.CtxError(

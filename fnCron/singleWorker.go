@@ -17,7 +17,7 @@ type SingleWorker struct {
 type ContextGenerator func(ctx context.Context) context.Context
 
 type Job interface {
-	Do(ctx context.Context) (err error)
+	Do(ctx context.Context, now time.Time) (err error)
 	IsRun(now time.Time) bool
 	GetName() string
 }
@@ -45,7 +45,7 @@ func (x *SingleWorker) Wait() {
 func (x *SingleWorker) Run() {
 	var startAt = time.Now()
 	var ctx = x.contextGenerator(context.TODO())
-	var err = x.job.Do(ctx)
+	var err = x.job.Do(ctx, startAt)
 
 	if err != nil {
 		fnLogger.GetLogger(ctx).CtxError(
