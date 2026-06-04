@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/d3v-friends/go-tools/fnCtx"
+	"github.com/d3v-friends/go-tools/fnEnv"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -61,11 +62,12 @@ func GetLogger(
 }
 
 func GetContextLogger(ctx context.Context) (logger ContextLogger) {
+	var logLevel = NewLogLevel(fnEnv.String("LOG_LEVEL", "INFO"))
 	return NewContextLogger(
 		ctx,
 		LogGroup{name: "",
 			color: ColorKeyWhite,
 		},
-		LogLevelInfo,
+		logLevel,
 	)
 }
