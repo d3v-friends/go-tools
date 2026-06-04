@@ -60,6 +60,17 @@ type Logger interface {
 	Fatal(message any, colors ...LogGroup)
 }
 
+type ContextLogger interface {
+	SetLevel(level LogLevel)
+	SetLogGroup(group LogGroup)
+	Trace(message any)
+	Debug(message any)
+	Info(message any)
+	Warn(message any)
+	Error(message any)
+	Fatal(message any)
+}
+
 type ColorKey string
 
 func (x ColorKey) String() string {
