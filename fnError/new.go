@@ -1,7 +1,7 @@
 package fnError
 
 import (
-	"encoding/json"
+	"github.com/d3v-friends/go-tools/fnString"
 	"github.com/pkg/errors"
 )
 
@@ -14,10 +14,8 @@ func NewF(format string, args ...any) error {
 }
 
 func NewFields(message string, field map[string]any) error {
-	var body, err = json.Marshal(field)
-	if err != nil {
-		return NewF("%s: marshal_error=%s", message, err.Error())
+	if len(field) != 0 {
+		message += ": " + fnString.Stringify(field)
 	}
-
-	return NewF("%s: %s", message, string(body))
+	return NewF(message)
 }
