@@ -2,22 +2,29 @@ package fnPointer
 
 import "reflect"
 
-func Make[T any](v T) *T {
-	return &v
-}
+func IsNil(i any) bool {
+	if i == nil {
+		return true
+	}
 
-func IsNil(v any) bool {
-	var vo = reflect.ValueOf(v)
-	if vo.Kind() != reflect.Pointer {
+	var v = reflect.ValueOf(i)
+	switch v.Kind() {
+	case reflect.Chan,
+		reflect.Func,
+		reflect.Map,
+		reflect.Pointer,
+		reflect.UnsafePointer,
+		reflect.Interface,
+		reflect.Slice:
+		return v.IsNil()
+	default:
 		return false
 	}
-
-	return vo.IsNil()
 }
 
-func Default[T any](value *T, defs T) *T {
+func Default[T any](value *T, defs T) T {
 	if IsNil(value) {
-		return &defs
+		return defs
 	}
-	return value
+	return *value
 }
