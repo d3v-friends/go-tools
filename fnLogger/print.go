@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/v2/bson"
 )
 
 func printLog(
@@ -22,7 +22,7 @@ func printLog(
 	var id, err = GetID(ctx)
 	if err != nil {
 		id = &CtxID{
-			Id:        primitive.NilObjectID.Hex(),
+			Id:        bson.NilObjectID.Hex(),
 			CreatedAt: time.Now(),
 		}
 	}

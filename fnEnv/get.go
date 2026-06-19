@@ -10,7 +10,7 @@ import (
 
 	"github.com/d3v-friends/go-tools/fnError"
 	"github.com/shopspring/decimal"
-	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/v2/bson"
 )
 
 const (
@@ -91,7 +91,7 @@ func Decimal(key string, defaultValues ...decimal.Decimal) decimal.Decimal {
 	return d
 }
 
-func ObjectID(key string, defaultValues ...primitive.ObjectID) primitive.ObjectID {
+func ObjectID(key string, defaultValues ...bson.ObjectID) bson.ObjectID {
 	var str = os.Getenv(key)
 	if str == "" {
 		if len(defaultValues) == 1 {
@@ -102,7 +102,7 @@ func ObjectID(key string, defaultValues ...primitive.ObjectID) primitive.ObjectI
 		}))
 	}
 
-	var id, err = primitive.ObjectIDFromHex(str)
+	var id, err = bson.ObjectIDFromHex(str)
 	if err != nil {
 		panic(fnError.NewFields(ErrInvalidObjectIDValue, map[string]any{
 			"key":   key,

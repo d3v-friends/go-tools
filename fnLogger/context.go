@@ -6,7 +6,7 @@ import (
 
 	"github.com/d3v-friends/go-tools/fnCtx"
 	"github.com/d3v-friends/go-tools/fnEnv"
-	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/v2/bson"
 )
 
 const (
@@ -25,7 +25,7 @@ func SetID(ctx context.Context, id ...*CtxID) context.Context {
 	}
 
 	return fnCtx.Set(ctx, CtxKeyId, &CtxID{
-		Id:        primitive.NewObjectID().Hex(),
+		Id:        bson.NewObjectID().Hex(),
 		CreatedAt: time.Now(),
 	})
 }
