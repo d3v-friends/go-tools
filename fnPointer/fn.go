@@ -22,6 +22,10 @@ func IsNil(i any) bool {
 	}
 }
 
+func IsNotNil(i any) bool {
+	return !IsNil(i)
+}
+
 func Default[T any](value *T, defs T) T {
 	if IsNil(value) {
 		return defs
